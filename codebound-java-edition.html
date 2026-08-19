@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CODEBOUND: Java Edition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Nunito:wght@500;700;800&family=Roboto+Mono:wght@500;700&display=swap');
+    :root { --ink:#131125;--navy:#1e214f;--paper:#fff6df;--gold:#ffc857;--orange:#ef8e36;--violet:#794ac4;--mint:#74e3b1;--danger:#ef5b67;--muted:#c6c3dd; }
+    * { box-sizing:border-box } body { margin:0; min-height:100vh; color:var(--paper); font-family:Nunito,system-ui,sans-serif; background:radial-gradient(circle at 15% 0%,#3b2b72 0,transparent 30%),radial-gradient(circle at 90% 70%,#17445c 0,transparent 28%),#111028; }
+    button { font:inherit; cursor:pointer; border:0 } .shell { max-width:1200px;margin:auto;padding:20px; }
+    header { display:flex;align-items:center;justify-content:space-between;gap:16px; padding:6px 0 20px; border-bottom:1px solid #ffffff25; }
+    .brand { display:flex;align-items:center;gap:12px; } .crest { width:52px;height:56px;display:grid;place-items:center;filter:drop-shadow(0 3px 0 #813a28) drop-shadow(0 8px 12px #0006); } .crest svg,.logo{width:100%;height:100%;display:block} .realm-icon{width:58px;height:58px;filter:drop-shadow(0 6px 10px #0005)} .realm-icon svg{width:100%;height:100%} .hero-art{display:grid;place-items:center} .hero-seal{position:relative;width:min(240px,70%);aspect-ratio:1;z-index:1;filter:drop-shadow(0 16px 28px #060513aa)} .hero-seal svg{width:100%;height:100%;animation:seal-breathe 4.5s ease-in-out infinite} .hero-orbit{position:absolute;inset:8% ;border:1.5px dashed #ffc85766;border-radius:50%;animation:orbit 22s linear infinite;pointer-events:none} .hero-orbit i{position:absolute;width:14px;height:14px;color:var(--gold)} .hero-orbit i:nth-child(1){top:-7px;left:50%;margin-left:-7px} .hero-orbit i:nth-child(2){bottom:18%;right:-7px} .hero-orbit i:nth-child(3){bottom:-7px;left:38%} @keyframes orbit{to{transform:rotate(360deg)}} @keyframes seal-breathe{50%{transform:scale(1.04) rotate(-2deg)}} .avatar.logo-wrap,.trophy.logo-wrap{display:grid;place-items:center;margin:0 auto} .avatar.logo-wrap{width:78px;height:78px} .enemy .avatar.logo-wrap{width:118px;height:118px;animation:idle-boss 2.6s ease-in-out infinite} @keyframes idle-boss{50%{transform:translateY(-5px)}} .trophy.logo-wrap{width:110px;height:110px;margin-bottom:8px;filter:drop-shadow(0 10px 18px #0007)} .fighter .avatar{font-size:inherit}
+    h1,h2,h3 { font-family:Cinzel,serif;margin:0 } h1 { font-size:clamp(1.15rem,3vw,1.85rem);letter-spacing:1px } .subtitle { color:var(--muted);font-size:.78rem;letter-spacing:1.3px;text-transform:uppercase }
+    .stats { display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:end } .stat { background:#09081977;border:1px solid #ffffff24;border-radius:10px;padding:6px 10px;font-weight:800;font-size:.82rem; } .xp { color:var(--gold) }.hp { color:#ff8b91 }.sound-btn{background:#292650;color:var(--paper);border:1px solid #ffffff24;border-radius:9px;padding:6px 9px;font-size:.8rem;font-weight:800}.sound-btn.on{color:var(--mint);border-color:var(--mint)}
+    main { padding:26px 0 10px } .screen { display:none;animation:appear .35s ease }.screen.active { display:block } @keyframes appear {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .hero { display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;min-height:420px }.eyebrow { color:var(--gold);font-weight:800;letter-spacing:1.7px;text-transform:uppercase;font-size:.78rem }.hero h2 { font-size:clamp(2rem,5vw,4.3rem);line-height:1.03;margin:10px 0 }.hero p { max-width:600px;font-size:1.12rem;line-height:1.65;color:#e1dff0 }.rune { color:var(--mint) }.button { padding:12px 18px;border-radius:10px;font-weight:800;background:linear-gradient(135deg,var(--gold),var(--orange));color:#2f1720;box-shadow:0 4px 0 #a34e2e;transition:.15s transform; }.button:hover{transform:translateY(-2px)} .button:active{transform:translateY(3px);box-shadow:none}.button.secondary { background:#292650;color:var(--paper);box-shadow:0 3px 0 #100f28;border:1px solid #ffffff26 }.button.small{padding:8px 12px;font-size:.88rem}
+    .hero-art { position:relative;height:330px;background:linear-gradient(145deg,#392a70,#18264e);border:1px solid #ffffff24;border-radius:22px;overflow:hidden;box-shadow:inset 0 0 60px #a951bd31,0 22px 45px #06051377}.hero-art:before{content:"";position:absolute;width:270px;height:270px;border:2px solid #ffc85755;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 18px #ffc85714,0 0 30px #ffc85755}
+    .map-head { display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:18px}.map-head p{margin:6px 0 0;color:var(--muted)}.realm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.realm{position:relative;text-align:left;padding:20px;min-height:178px;border-radius:16px;color:var(--paper);background:linear-gradient(145deg,#292653,#171532);border:1px solid #ffffff22;overflow:hidden}.realm:not(.locked):hover{border-color:var(--gold);transform:translateY(-3px)}.realm:after{content:"";position:absolute;width:140px;height:140px;background:var(--accent,#794ac4);opacity:.13;right:-30px;bottom:-45px;border-radius:50%}.realm h3{font-size:1rem;margin:12px 0 6px}.realm p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.35}.tag{display:inline-block;margin-top:12px;padding:4px 8px;border-radius:99px;background:#ffffff13;font-size:.73rem;font-weight:800}.locked{filter:saturate(.5);opacity:.68;cursor:not-allowed}.locked .tag{color:#d0cee0}.open .tag{color:var(--mint)}.realm.done{border-color:#74e3b180}.realm.done .tag{color:var(--gold)}
+    .lesson-wrap{max-width:900px;margin:auto}.crumb{color:var(--muted);font-size:.9rem;margin-bottom:12px}.lesson-card,.battle-card{background:linear-gradient(145deg,#292653,#171532);border:1px solid #ffffff22;border-radius:18px;padding:clamp(20px,4vw,38px);box-shadow:0 18px 35px #09081744}.lesson-card h2{font-size:clamp(1.5rem,4vw,2.35rem);margin:8px 0}.lesson-card p{line-height:1.65;color:#e4e0f1}.callout{background:#100f2d88;border-left:4px solid var(--mint);padding:14px 16px;border-radius:0 10px 10px 0;margin:18px 0;line-height:1.55}.facts{margin:16px 0 0;padding:0;list-style:none}.facts li{padding:9px 0;border-bottom:1px solid #ffffff14;line-height:1.55;color:#e4e0f1}.facts li b{color:var(--gold)}.code{font-family:'Roboto Mono',monospace;background:#0b0b1d;border:1px solid #ffffff18;border-radius:10px;padding:16px;color:#d7d4f9;line-height:1.7;white-space:pre-wrap;overflow:auto}.key{color:#f7a9ff}.type{color:#74e3b1}.str{color:#ffc857}.comment{color:#8b89ad}.lesson-nav{display:flex;justify-content:space-between;gap:12px;margin-top:24px}.dots{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.dot{width:9px;height:9px;border-radius:50%;background:#605d89}.dot.on{background:var(--gold);box-shadow:0 0 8px var(--gold)}.lesson-progress{height:8px;background:#0b0a20;border-radius:99px;overflow:hidden;margin:14px 0 4px}.lesson-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--gold));transition:width .3s}.progress-label{font-size:.77rem;color:var(--muted);text-align:right}
+    .battle-top{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;text-align:center}.fighter{padding:10px}.avatar{font-size:64px}.fighter h3{font-size:1rem}.bar{height:13px;background:#090918;border-radius:99px;overflow:hidden;border:1px solid #ffffff22;margin:8px 0 3px}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#ef5b67,#ff9a70);transition:width .35s}.enemy .bar i{background:linear-gradient(90deg,#e95b61,#ffb45a)}.vs{font-family:Cinzel;font-size:1.4rem;color:var(--gold)}.battle-log{min-height:54px;text-align:center;padding:14px;margin:18px 0;border-radius:10px;background:#0c0b22a8;color:#dedbef}.spells{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.spell{background:#352b62;color:var(--paper);border:1px solid #ffffff25;border-radius:11px;padding:12px;text-align:left}.spell:hover:not(:disabled){background:#4a3d7e;border-color:var(--gold)}.spell:disabled{opacity:.45;cursor:not-allowed}.spell b{display:block;font-size:.9rem}.spell span{font-size:.75rem;color:var(--muted)}
+    .challenge{margin-top:22px}.challenge h3{margin-bottom:8px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer{padding:13px;border-radius:9px;background:#332f5d;color:var(--paper);text-align:left;border:1px solid #ffffff22}.answer:hover{border-color:var(--mint)}.answer.good{background:#21644d;border-color:var(--mint)}.answer.bad{background:#72323f;border-color:#ff8b91}.result{margin-top:16px;padding:14px;border-radius:10px;background:#ffffff10;display:none}.result.show{display:block}.challenge.empty{opacity:.72}.victory{text-align:center}.footer-note{text-align:center;color:#aaa7c9;font-size:.8rem;padding:30px 0 8px}
+    @media(max-width:700px){.shell{padding:14px}.hero{grid-template-columns:1fr}.hero-art{height:230px;order:-1}.hero-seal{width:min(180px,58%)}.realm-grid{grid-template-columns:1fr 1fr}.battle-top{grid-template-columns:1fr auto 1fr;gap:2px}.spells{grid-template-columns:1fr}.stats{gap:5px}.stat{padding:5px 7px}.answers{grid-template-columns:1fr}}@media(max-width:430px){.realm-grid{grid-template-columns:1fr}.avatar.logo-wrap{width:58px;height:58px}.battle-top{font-size:.82rem}}
+  </style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#e07a28"/></linearGradient>
+    <linearGradient id="gNight" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b2b72"/><stop offset="1" stop-color="#171532"/></linearGradient>
+  </defs>
+  <symbol id="logo-codebound" viewBox="0 0 64 64">
+    <path d="M32 4l20 8v18c0 13-8 22-20 28C20 52 12 43 12 26V12z" fill="url(#gGold)"/>
+    <path d="M32 10l14 5.5v14c0 10-6 17-14 22-8-5-14-12-14-22v-14z" fill="url(#gNight)"/>
+    <path d="M25 24c-5 1-7 6-7 10s2 9 7 10M39 24c5 1 7 6 7 10s-2 9-7 10" fill="none" stroke="#74e3b1" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M24 36h16c0 6-3.5 11-8 13-4.5-2-8-7-8-13z" fill="#ffc857"/>
+    <path d="M40 38c3 .3 5 2 5 4.6s-2 4.4-5 4.7" fill="none" stroke="#ffc857" stroke-width="2"/>
+  </symbol>
+  <symbol id="logo-computing" viewBox="0 0 64 64">
+    <rect x="16" y="16" width="32" height="32" rx="4" fill="#5b3aa8"/>
+    <rect x="22" y="22" width="20" height="20" rx="2" fill="#17132f" stroke="#ffc857" stroke-width="1.6"/>
+    <path d="M32 26v12M26 32h12" stroke="#74e3b1" stroke-width="2"/>
+    <rect x="29" y="8" width="6" height="8" rx="1" fill="#c9a6ff"/><rect x="29" y="48" width="6" height="8" rx="1" fill="#c9a6ff"/>
+    <rect x="8" y="29" width="8" height="6" rx="1" fill="#c9a6ff"/><rect x="48" y="29" width="8" height="6" rx="1" fill="#c9a6ff"/>
+  </symbol>
+  <symbol id="logo-logic" viewBox="0 0 64 64">
+    <path d="M32 6l22 12v20L32 58 10 38V18z" fill="#3d8ec4"/>
+    <circle cx="24" cy="32" r="8" fill="none" stroke="#fff6df" stroke-width="2.4"/>
+    <circle cx="40" cy="32" r="8" fill="#ffc857"/>
+    <path d="M32 32h0" stroke="#fff6df" stroke-width="3"/>
+    <path d="M31.2 32h1.6" stroke="#171532" stroke-width="3"/>
+  </symbol>
+  <symbol id="logo-control" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="26" fill="#2fa37a"/>
+    <path d="M32 16a16 16 0 1 1-11 27" fill="none" stroke="#fff6df" stroke-width="4" stroke-linecap="round"/>
+    <path d="M42 18l6 8-9-1z" fill="#ffe9a8"/>
+    <circle cx="32" cy="32" r="4" fill="#ffc857"/>
+  </symbol>
+  <symbol id="logo-method" viewBox="0 0 64 64">
+    <path d="M18 10h22c8 0 12 5 12 12v30c-7-4-12-3-18 0-6 3-11 2-16-1V10z" fill="#ef8e36"/>
+    <path d="M24 26c-4 0-6 4-6 7s2 7 6 7M40 26c4 0 6 4 6 7s-2 7-6 7" fill="none" stroke="#fff6df" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="logo-structure" viewBox="0 0 64 64">
+    <path d="M32 8l20 11v18L32 48 12 37V19z" fill="#d45a2a"/>
+    <path d="M12 37l20 11 20-11v12L32 60 12 49z" fill="#9a3a18"/>
+    <circle cx="32" cy="28" r="3.5" fill="#ffc857"/>
+    <circle cx="24" cy="33" r="2.5" fill="#74e3b1"/>
+    <circle cx="40" cy="33" r="2.5" fill="#74e3b1"/>
+  </symbol>
+  <symbol id="logo-prompting" viewBox="0 0 64 64">
+    <ellipse cx="32" cy="36" rx="18" ry="14" fill="#c6284a"/>
+    <circle cx="25" cy="33" r="3" fill="#1a1020"/><circle cx="39" cy="33" r="3" fill="#1a1020"/>
+    <path d="M20 22l-6-8M44 22l6-8M32 20v-8" stroke="#ffb3ba" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M24 42c2.5 2 13.5 2 16 0" fill="none" stroke="#1a1020" stroke-width="2"/>
+  </symbol>
+  <symbol id="logo-star" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1.4l1.6 3.8 4.1.3-3.1 2.7 1 4L8 10.1 4.4 12.2l1-4-3.1-2.7 4.1-.3z"/></symbol>
+  <symbol id="logo-crown" viewBox="0 0 64 64">
+    <path d="M10 42h44L46 20 32 34 18 20z" fill="url(#gGold)"/>
+    <rect x="12" y="42" width="40" height="8" fill="#c47a22"/>
+    <circle cx="18" cy="18" r="4" fill="#74e3b1"/><circle cx="32" cy="12" r="4.5" fill="#fff6df"/><circle cx="46" cy="18" r="4" fill="#ef5b67"/>
+  </symbol>
+  <symbol id="boss-computing" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="28" ry="6" fill="#000" opacity=".28"/>
+    <path d="M22 52h52l-6 28H28z" fill="#6d6458"/>
+    <path d="M18 44h16v18H18z" fill="#7c7367"/><path d="M62 44h16v18H62z" fill="#7c7367"/>
+    <rect x="30" y="18" width="36" height="34" rx="3" fill="#8a8175"/>
+    <rect x="36" y="28" width="10" height="8" fill="#74e3b1"/><rect x="50" y="28" width="10" height="8" fill="#74e3b1"/>
+    <rect x="38" y="42" width="20" height="5" fill="#2a2420"/>
+    <path d="M48 18V8M34 24h-10M62 24h10" stroke="#ffc857" stroke-width="2"/>
+    <path d="M40 58h16M36 68h24" stroke="#3a342e" stroke-width="2"/>
+    <circle cx="26" cy="50" r="4" fill="#c9a6ff"/><circle cx="70" cy="50" r="4" fill="#c9a6ff"/>
+  </symbol>
+  <symbol id="boss-logic" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="26" ry="5" fill="#000" opacity=".25"/>
+    <path d="M48 86c28-18 26-52 0-68-26 16-28 50 0 68z" fill="#6ec4ff" opacity=".35"/>
+    <path d="M30 30c0-14 36-14 36 0 8 10 6 28-6 36-8 12-16 12-24 0-12-8-14-26-6-36z" fill="#c9b8ff"/>
+    <ellipse cx="48" cy="40" rx="12" ry="14" fill="#1a1233"/>
+    <circle cx="42" cy="40" r="3.2" fill="#74e3b1"/><circle cx="54" cy="40" r="3.2" fill="#ffc857"/>
+    <path d="M40 52c5 5 11 5 16 0" fill="none" stroke="#1a1233" stroke-width="2"/>
+    <text x="18" y="24" font-size="10" fill="#74e3b1" font-family="monospace">int</text>
+    <text x="62" y="22" font-size="10" fill="#ffc857" font-family="monospace">?</text>
+    <path d="M20 58c8 4 10 12 6 20M76 58c-8 4-10 12-6 20" fill="none" stroke="#a78cff" stroke-width="3" opacity=".8"/>
+  </symbol>
+  <symbol id="boss-control" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="30" ry="5" fill="#000" opacity=".25"/>
+    <path d="M18 48c0-18 14-32 30-32 10 0 16 6 16 6-8 2-12 10-10 18 10-8 24-6 28 6 6 16-8 30-26 34-22 4-38-10-38-32z" fill="#2a8f62"/>
+    <path d="M22 50c4-16 18-24 32-20 8 2 10 10 6 16-10-6-22 0-20 12 12-4 22 4 20 14-8 14-32 12-38-22z" fill="#3cbc8a"/>
+    <circle cx="34" cy="40" r="5" fill="#ffe9a8"/><circle cx="34" cy="40" r="2" fill="#12352c"/>
+    <circle cx="62" cy="36" r="6" fill="#ffe9a8"/><circle cx="62" cy="36" r="2.4" fill="#12352c"/>
+    <path d="M48 58c8 2 16-2 18-8" fill="none" stroke="#12352c" stroke-width="3"/>
+    <path d="M70 28l10-8M26 30L16 20" stroke="#74e3b1" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="78" cy="18" r="4" fill="#ffc857"/><circle cx="14" cy="18" r="4" fill="#ffc857"/>
+  </symbol>
+  <symbol id="boss-method" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="24" ry="5" fill="#000" opacity=".28"/>
+    <path d="M24 78c4-28 6-48 24-58 18 10 20 30 24 58-16-8-32-8-48 0z" fill="#1a1028"/>
+    <path d="M32 28c8-16 24-16 32 0 4 8 2 22-4 28-8 10-16 10-24 0-6-6-8-20-4-28z" fill="#3a2458"/>
+    <ellipse cx="48" cy="38" rx="10" ry="12" fill="#0b0714"/>
+    <path d="M42 38h12" stroke="#c9a6ff" stroke-width="2"/>
+    <path d="M28 18c-8-8-16-4-18 4M68 18c8-8 16-4 18 4" fill="none" stroke="#794ac4" stroke-width="3"/>
+    <text x="38" y="72" font-size="9" fill="#ffc857" font-family="monospace">()</text>
+    <path d="M20 58c-8 8-10 18-6 24M76 58c8 8 10 18 6 24" fill="none" stroke="#5a2ea8" stroke-width="3" opacity=".7"/>
+  </symbol>
+  <symbol id="boss-structure" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="28" ry="5" fill="#000" opacity=".28"/>
+    <path d="M28 78l8-34h24l8 34z" fill="#4a5568"/>
+    <path d="M30 46h36l-6 16H36z" fill="#718096"/>
+    <path d="M34 20h28l6 18H28z" fill="#2d3748"/>
+    <rect x="38" y="26" width="8" height="6" fill="#ef5b67"/><rect x="50" y="26" width="8" height="6" fill="#ef5b67"/>
+    <path d="M42 36h12v4H42z" fill="#1a202c"/>
+    <rect x="40" y="50" width="16" height="16" fill="#1a202c" stroke="#74e3b1" stroke-width="2"/>
+    <text x="42" y="61" font-size="8" fill="#74e3b1" font-family="monospace">0</text>
+    <path d="M18 50h12v8H18zM66 50h12v8H66z" fill="#4a5568"/>
+    <path d="M22 40l-8-16M74 40l8-16" stroke="#cbd5e0" stroke-width="3"/>
+  </symbol>
+  <symbol id="boss-prompting" viewBox="0 0 96 96">
+    <ellipse cx="48" cy="88" rx="32" ry="6" fill="#000" opacity=".3"/>
+    <ellipse cx="48" cy="58" rx="30" ry="22" fill="#8b1e32"/>
+    <ellipse cx="48" cy="54" rx="22" ry="16" fill="#c6284a"/>
+    <path d="M20 50c-8 4-14 2-16-4M76 50c8 4 14 2 16-4" stroke="#6a1524" stroke-width="4"/>
+    <circle cx="36" cy="50" r="7" fill="#1a1020"/><circle cx="60" cy="50" r="7" fill="#1a1020"/>
+    <circle cx="38" cy="48" r="2.4" fill="#ffc857"/><circle cx="62" cy="48" r="2.4" fill="#ffc857"/>
+    <path d="M34 64c8 8 20 8 28 0" fill="none" stroke="#1a1020" stroke-width="3"/>
+    <path d="M28 36c-4-16 6-24 12-18M68 36c4-16-6-24-12-18M48 30c0-14 0-20 0-22" stroke="#ef8e36" stroke-width="3" stroke-linecap="round"/>
+    <path d="M22 72l-10 10M74 72l10 10M30 78l-4 10M66 78l4 10" stroke="#6a1524" stroke-width="3"/>
+    <path d="M40 22h16l-4 8H44z" fill="#ffc857"/>
+  </symbol>
+</svg>
+<div class="shell">
+  <header><div class="brand"><div class="crest" title="CODEBOUND"><svg viewBox="0 0 64 64"><use href="#logo-codebound"/></svg></div><div><h1>CODEBOUND <span class="rune">: JAVA EDITION</span></h1><div class="subtitle">Learn the Code · Forge Your Spells · Defeat the Bugs</div></div></div><div class="stats"><button id="musicBtn" class="sound-btn on" type="button">♫ Music: On</button><button id="narratorBtn" class="sound-btn" type="button">🔇 Narrator: Off</button><div class="stat">LV <span id="level">1</span></div><div class="stat xp">✦ <span id="xp">0</span> XP</div><div class="stat hp">♥ <span id="topHp">100</span>/100</div></div></header>
+  <main>
+    <section id="home" class="screen active"><div class="hero"><div><div class="eyebrow">A Java learning adventure</div><h2>Every line of code<br>is a <span class="rune">spell.</span></h2><p>Travel six realms, learn Java one step at a time, and use what you learn to defeat bugs, beasts, and the Java Bug Lord.</p><button class="button" type="button" data-show="map">Begin Your Quest →</button></div><div class="hero-art"><div class="hero-orbit"><i><svg viewBox="0 0 16 16"><use href="#logo-star"/></svg></i><i><svg viewBox="0 0 16 16"><use href="#logo-star"/></svg></i><i><svg viewBox="0 0 16 16"><use href="#logo-star"/></svg></i></div><div class="hero-seal"><svg viewBox="0 0 64 64"><use href="#logo-codebound"/></svg></div></div></div></section>
+    <section id="map" class="screen"><div class="map-head"><div><div class="eyebrow">World map</div><h2>Choose Your Realm</h2><p>Knowledge is your strongest magic. Clear a realm to unlock the next.</p></div><button class="button secondary small" type="button" data-show="home">← Camp</button></div><div class="realm-grid" id="realmGrid"></div></section>
+    <section id="lesson" class="screen"><div class="lesson-wrap"><div class="crumb" id="lessonCrumb"></div><div class="lesson-card"><div class="eyebrow">Lesson <span id="lessonNum">1</span> of <span id="lessonTotal">6</span></div><div class="lesson-progress"><i id="lessonProgress" style="width:17%"></i></div><div class="progress-label">Learning progress</div><h2 id="lessonTitle"></h2><div id="lessonBody"></div><div class="lesson-nav"><button class="button secondary small" type="button" data-show="map">← World Map</button><div class="dots" id="dots"></div><button class="button small" id="nextLesson" type="button">Continue →</button></div></div></div></section>
+    <section id="realmQuiz" class="screen"><div class="lesson-wrap"><div class="crumb" id="quizCrumb"></div><div class="lesson-card"><div class="eyebrow">Before the boss</div><h2>Prove Your Readiness</h2><p>Miss a question and you will try it again with the answers in a new order. You must get every question right to continue.</p><p id="miniProgress">Question 1 of 3</p><div class="lesson-progress"><i id="miniProgressBar" style="width:33%"></i></div><p id="miniQuestion"></p><div class="answers" id="miniAnswers"></div><div id="miniResult" class="result"></div></div></div></section>
+    <section id="battle" class="screen"><div class="lesson-wrap"><div class="crumb" id="battleCrumb"></div><div class="battle-card"><div class="battle-top"><div class="fighter"><div class="avatar logo-wrap"><svg viewBox="0 0 64 64"><use href="#logo-codebound"/></svg></div><h3>Code Apprentice</h3><div class="bar"><i id="playerBar" style="width:100%"></i></div><small><span id="playerHp">100</span> / 100 HP</small></div><div class="vs">VS</div><div class="fighter enemy"><div class="avatar logo-wrap" id="enemyAvatar"><svg viewBox="0 0 96 96"><use href="#boss-computing"/></svg></div><h3 id="enemyName">Hardware Golem</h3><div class="bar"><i id="enemyBar" style="width:100%"></i></div><small><span id="enemyHp">75</span> / <span id="enemyMax">75</span> HP</small></div></div><div class="battle-log" id="battleLog"></div><div class="spells" id="spells"></div><div class="challenge empty" id="challenge"><h3 id="challengeTitle">Spell Challenge</h3><p id="question">Choose a spell above to reveal its question.</p><div class="answers" id="answers"></div><div id="result" class="result"></div></div></div></div></section>
+    <section id="victory" class="screen"><div class="lesson-wrap"><div class="lesson-card victory"><div class="trophy logo-wrap" id="victoryTrophy"><svg viewBox="0 0 64 64"><use href="#logo-codebound"/></svg></div><div class="eyebrow" id="victoryEyebrow">Realm cleared</div><h2 id="victoryTitle"></h2><p id="victoryText"></p><div class="callout" id="victoryCallout"></div><button class="button" type="button" data-show="map">Return to World Map →</button></div></div></section>
+  </main><div class="footer-note">CODEBOUND: JAVA EDITION · Your progress is saved in this browser.</div>
+</div>
+<script>
+const defaultState = {xp:0, computing:false, logic:false, control:false, method:false, structure:false, prompting:false};
+function loadState(){
+  try {
+    const raw = JSON.parse(localStorage.getItem('codeboundState') || '{}');
+    return {
+      ...defaultState,
+      ...raw,
+      computing: !!(raw.computing || raw.cleared),
+      logic: !!(raw.logic || raw.logicComplete),
+      control: !!(raw.control || raw.controlComplete)
+    };
+  } catch { return {...defaultState}; }
+}
+let state = loadState();
+let lesson = 0, realmId = 'computing', playerHp = 100, enemyHp = 75, ward = false, pendingSpell = null, activeQuestion = null;
+const spellUses = {};
+const spellDeck = {};
+
+function shuffle(list){
+  const a = list.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function shuffleQuestion(q){
+  const order = shuffle(q.answers.map((_, i) => i));
+  return { ...q, answers: order.map(i => q.answers[i]), correct: order.indexOf(q.correct) };
+}
+
+const Q = (question, answers, correct, why='') => ({question, answers, correct, why});
+
+const realms = [
+  {
+    id:'computing', icon:'🖥️', name:'The Computing Realm', blurb:'How computers work & your first Java spell',
+    xp:100, accent:'#794ac4',
+    mapNarration:'The Computing Realm is your first quest. Learn how computers think, then face the Hardware Golem.',
+    lessons:[
+      {title:'What a Computer Does', narration:'A computer takes input, processes it, shows output, and can store data. A program is a list of instructions. Java is one language for writing those instructions.', body:`<p>A <b>computer</b> is a machine that follows instructions. Those instructions are called a <b>program</b>.</p><div class="callout"><b>The four steps:</b> Input → Process → Output → Store</div><ul class="facts"><li><b>Input</b> is data going in, like a keyboard, mouse, or file.</li><li><b>Processing</b> is the computer following your instructions, one after another.</li><li><b>Output</b> is the result, like text on the screen or sound.</li><li><b>Storage</b> keeps data after the program stops, like saving a file.</li><li><b>Hardware</b> is the physical parts. <b>Software</b> is the programs.</li><li><b>Java</b> is a programming language: a way to write instructions the computer can run.</li></ul>`},
+      {title:'Your First Java Program', narration:'A Java program lives in a class. Java starts in the main method. Curly braces group code. Most lines end with a semicolon.', body:`<p>Every beginner Java program has the same skeleton. Copy this shape until it feels familiar.</p><div class="code"><span class="key">public class</span> <span class="type">HelloRealm</span> {\n  <span class="key">public static void</span> main(String[] args) {\n    System.out.println(<span class="str">"Welcome, hero!"</span>);\n  }\n}</div><ul class="facts"><li>The <b>class name</b> (HelloRealm) should match the file name: HelloRealm.java.</li><li><b>main</b> is the starting door. Java looks for this method first.</li><li><b>{ }</b> curly braces group the lines that belong together.</li><li>Most instructions end with a <b>semicolon</b> <code>;</code>.</li><li><code>public</code> means other code may use it. You will see it often on main.</li><li><code>String[] args</code> can hold extra words typed when the program starts. Beginners can ignore it at first.</li></ul>`},
+      {title:'CPU, Memory, Storage, and I/O', narration:'The C P U follows instructions. RAM is short-term memory while a program runs. Storage keeps files after shutdown. Input and output devices talk to the world.', body:`<p>These four parts work together when your Java program runs.</p><div class="callout">CPU thinks · RAM remembers for now · Storage remembers later · I/O talks to you</div><ul class="facts"><li>The <b>CPU</b> is the processor. It follows each Java instruction.</li><li><b>RAM</b> is working memory. Variables live here while the program runs. It is wiped when the program ends.</li><li><b>Storage</b> (disk or SSD) keeps files after you turn the computer off.</li><li><b>Input devices</b>: keyboard, mouse, microphone, files you read.</li><li><b>Output devices</b>: screen, speakers, files you write.</li><li>If your code is unclear, the CPU still tries to follow it. That is how bugs happen.</li></ul>`},
+      {title:'How to Print Text', narration:'System dot out dot print-line shows a message and then starts a new line. Put text in double quotes. Java cares about capital letters. End the line with a semicolon.', body:`<p><code>System.out.println</code> means: send this value to the console, then move to the next line.</p><div class="code">System.out.println(<span class="str">"Welcome, hero!"</span>);\nSystem.out.print(<span class="str">"Same line"</span>);\nSystem.out.println(25);</div><ul class="facts"><li><b>println</b> prints and then starts a new line. <b>print</b> stays on the same line.</li><li>Text (a <b>String</b>) uses <b>double quotes</b>: <code>"hello"</code>.</li><li>Numbers do <b>not</b> need quotes: <code>System.out.println(25);</code> prints 25.</li><li>Java is <b>case-sensitive</b>. Write <code>System</code>, not <code>system</code>.</li><li>Join text and a number with <b>+</b>: <code>"Health: " + health</code>.</li><li>If you put a variable name in quotes, Java prints the name, not the value.</li></ul>`},
+      {title:'Variables Store Values', narration:'A variable is a named box for a value. Write the type, then the name, then equals, then the value. Int is a whole number. String is text. Boolean is true or false.', body:`<p>A <b>variable</b> lets you save a value and use it later by name.</p><div class="code"><span class="type">int</span> health = 100;\nString heroName = <span class="str">"Ava"</span>;\n<span class="type">boolean</span> questComplete = false;</div><div class="callout"><b>Pattern:</b> <code>type name = value;</code></div><ul class="facts"><li><b>int</b> = whole numbers like 0, 7, 100. Not 3.14.</li><li><b>String</b> = text. The value needs double quotes.</li><li><b>boolean</b> = only <code>true</code> or <code>false</code> (lowercase).</li><li>After a variable exists, change it with <code>health = 80;</code> (no type again).</li><li>Names usually use <b>camelCase</b>: <code>heroName</code>, not <code>hero-name</code>.</li><li>Names cannot start with a number. <code>2health</code> is not allowed.</li></ul>`},
+      {title:'Comments Are Notes', narration:'Comments are notes for people. Java skips them. Two slashes start a one-line comment. Slash-star and star-slash wrap a longer comment.', body:`<p>Use comments to explain <b>why</b> the code is there. They do not change what the program does.</p><div class="code"><span class="comment">// Reset health at the start of a quest</span>\nhealth = 100;\n\n<span class="comment">/* This block comment\n   can use more than one line. */</span></div><ul class="facts"><li><code>//</code> starts a <b>single-line</b> comment. Everything after it on that line is ignored.</li><li><code>/* ... */</code> is a <b>block comment</b>. It can span many lines.</li><li>You can put <code>//</code> after a finished statement: <code>health = 100; // full health</code>.</li><li>Good comments add meaning. “Start each hero with full health” is better than “set health to 100”.</li><li>If you comment out a whole <code>println</code>, that line will not print. That is expected.</li><li>Comments are for humans. Java never prints them.</li></ul>`}
+    ],
+    quiz:[
+      Q('Which part of a computer follows a program’s instructions?',['CPU','Keyboard','Monitor','Storage'],0,'The CPU is the computer’s processor. It follows the instructions in your Java program.'),
+      Q('Which Java command displays a line of text?',['console.log("Hi");','System.out.println("Hi");','print("Hi");','show("Hi");'],1,'System.out.println() is Java’s command for displaying a line of text.'),
+      Q('Which declaration creates a whole-number variable named score?',['score int = 10;','number score = 10;','int score = 10;','int = score 10;'],2,'Java declarations begin with the data type, then the name, then the assigned value.'),
+      Q('What is RAM used for?',['Keeping files after shutdown','Short-term working memory while a program runs','Showing pictures only','Cooling the CPU'],1,'RAM is working memory. It holds values while the program runs and is cleared when the program ends.'),
+      Q('Which symbol starts a single-line Java comment?',['##','//','<!--','**'],1,'Two forward slashes start a single-line comment. Java ignores the rest of that line.')
+    ],
+    boss:{name:'Hardware Golem', avatar:'🗿', hp:75, intro:'The Hardware Golem blocks the gate. Choose a spell, then answer its Java question to cast it!',
+      defeat:'The Hardware Golem crumbles into friendly components.',
+      spells:[
+        {id:'print', name:'✦ Print Spell', hint:'System.out.println() · 22 damage', damage:22, heal:0, ward:false},
+        {id:'variable', name:'⚗ Variable Vial', hint:'Store a value · 16 damage + heal', damage:16, heal:9, ward:false},
+        {id:'comment', name:'☾ Comment Ward', hint:'Explain your code · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        print:[
+          Q('Which Java command displays a line of text in the console?',['print("Hello");','System.out.println("Hello");','console.log("Hello");','show("Hello");'],1),
+          Q('Which line correctly prints Welcome, hero!?',['System.out.println(Welcome, hero!);','System.out.println("Welcome, hero!");','print("Welcome, hero!");','System.printline("Welcome, hero!");'],1),
+          Q('Which command has the correct Java capitalization?',['system.out.println("Hi");','SYSTEM.OUT.PRINTLN("Hi");','System.out.println("Hi");','System.Out.Println("Hi");'],2),
+          Q('Which command prints text and then moves to a new line?',['System.out.print("Hi");','System.out.println("Hi");','System.line("Hi");','System.newline("Hi");'],1),
+          Q('Which line prints the number 25 as a number?',['System.out.println(25);','System.out.println("25);','print(25);','System.out.println[number 25];'],0),
+          Q('Which line has the required semicolon?',['System.out.println("Ready")','System.out.println("Ready");','System.out.println;("Ready")','System.out.println("Ready"):'],1),
+          Q('What does System.out.println(4 + 3); display?',['4 + 3','7','43','An error'],1),
+          Q('If heroName stores Ava, which line prints Ava?',['System.out.println("heroName");','System.out.println(heroName);','System.out.println(String heroName);','System.out.println = heroName;'],1),
+          Q('Which has parentheses in the correct place?',['System.out.println "Go";','System.out.println("Go");','System.(out.println"Go");','System.out.(println"Go");'],1),
+          Q('Which command stays on the same line after printing?',['System.out.println("Hi");','System.out.print("Hi");','printline("Hi");','System.newline("Hi");'],1)
+        ],
+        variable:[
+          Q('Which line correctly creates an integer variable named health?',['int = health 100;','integer health = 100;','int health = 100;','health int 100;'],2),
+          Q('Which line correctly stores the hero name as text?',['String name = "Ava";','text name = Ava;','String = name "Ava";','name String = Ava;'],0),
+          Q('Which line correctly creates a boolean named questComplete?',['boolean questComplete = true;','bool questComplete = True;','boolean = questComplete yes;','Boolean questComplete = "true";'],0),
+          Q('If health was already declared, which line changes it to 80?',['int health = 80;','health = 80;','health int = 80;','set health = 80;'],1),
+          Q('Which is a valid Java variable name?',['2health','player health','playerHealth','player-health'],2),
+          Q('What value is stored after int coins = 12;?',['The text coins','The number 12','The word int','Nothing'],1),
+          Q('Which type stores a decimal?',['int','double','boolean','char'],1),
+          Q('Which name uses camelCase?',['player_health','Player Health','playerHealth','PLAYERHEALTH'],2),
+          Q('Which line correctly stores the letter A as a char?',['char rank = "A";','char rank = \'A\';','String rank = \'A\';','character rank = A;'],1),
+          Q('Which value can be stored in an int?',['7','3.14','true','"7" only'],0)
+        ],
+        comment:[
+          Q('Which Java symbol begins a single-line comment?',['## comment','// comment','<!-- comment -->','** comment'],1),
+          Q('Which pair marks a Java block comment?',['<!-- and -->','/* and */','// and //','## and ##'],1),
+          Q('What happens when Java sees a comment?',['It prints the comment','It ignores the comment','It turns it into a variable','It gives an error'],1),
+          Q('Which line correctly adds a comment after an assignment?',['health = 100; // reset health','health = 100; ## reset health','health = 100; <!-- reset health -->','// health = 100; reset health'],0),
+          Q('Which line will Java ignore completely?',['// System.out.println("Hidden");','System.out.println("Hidden");','/* System.out.println("Hidden");','System.out.println // "Hidden";'],0),
+          Q('Which comment is most helpful?',['// set health to 100','// Start each hero with full health before a quest','// health','// number'],1),
+          Q('Which code is a valid block comment?',['/* Quest setup */','// Quest setup //','<comment>Quest setup</comment>','## Quest setup ##'],0),
+          Q('Which line does not print anything?',['// System.out.println("Hi");','System.out.println("Hi");','System.out.print("Hi");','System.out.println(7);'],0),
+          Q('Where can a single-line comment safely go?',['Inside a variable name','After a completed statement','Inside the word System','Between the two slashes of an operator'],1)
+        ]
+      }
+    },
+    victory:{title:'The Computing Realm is Restored!', text:'You learned how computer systems work, what Java programs do, and how to display a message. The Hardware Golem has become your guardian.', reward:'You earned <b>100 XP</b>, the <b>Computing Realm Crest</b>, and access to <b>The Logic Realm</b>.', narration:'The Computing Realm is restored. The Logic Realm now awaits.'}
+  },
+  {
+    id:'logic', icon:'🧠', name:'The Logic Realm', blurb:'Variables, data types & operators',
+    xp:200, accent:'#4aa3d9',
+    mapNarration:'The Logic Realm teaches data types and operators. They will power every later spell.',
+    lessons:[
+      {title:'Every Value Has a Type', narration:'Java needs a type for every value. Int is a whole number. Double is a decimal. String is text. Boolean is true or false. Char is one character.', body:`<p>A <b>type</b> tells Java what kind of value a variable can hold.</p><div class="code"><span class="type">int</span> health = 100;\ndouble potion = 12.5;\nString hero = <span class="str">"Ava"</span>;\n<span class="type">boolean</span> hasKey = true;\n<span class="type">char</span> rank = <span class="str">'A'</span>;</div><ul class="facts"><li><b>int</b>: whole numbers. 7 is fine. 7.5 is not.</li><li><b>double</b>: numbers with a decimal point, like 9.99.</li><li><b>String</b>: text in <b>double quotes</b>.</li><li><b>char</b>: exactly one character in <b>single quotes</b>: <code>'A'</code>.</li><li><b>boolean</b>: <code>true</code> or <code>false</code> only. Not <code>True</code> or <code>"true"</code>.</li><li>Pick the type that matches the data. Putting 9.99 in an int will not work as you expect.</li></ul>`},
+      {title:'Declare, Then Assign', narration:'Declaring creates the variable and names its type. Assigning puts a value in it. You write the type only when you create it.', body:`<p><b>Declare</b> means create the box. <b>Assign</b> means put a value inside.</p><div class="code"><span class="type">int</span> coins;\ncoins = 10;\ncoins = coins + 5; <span class="comment">// now 15</span></div><ul class="facts"><li>You can declare and assign together: <code>int coins = 10;</code>.</li><li>After it exists, do <b>not</b> write the type again: <code>coins = 20;</code>.</li><li><code>=</code> means “put this value into that variable.” It is not a math equals sign.</li><li><code>coins + 5</code> by itself does not save the answer. You must assign: <code>coins = coins + 5;</code>.</li><li>A shortcut: <code>coins += 5;</code> means the same as adding 5 and storing it.</li><li><code>coins++</code> adds 1. <code>coins--</code> subtracts 1.</li></ul>`},
+      {title:'Math Operators', narration:'Plus, minus, star, and slash do arithmetic. Percent gives the remainder. With two ints, slash does integer division and drops the extra fraction.', body:`<p>Operators take values and produce a new value.</p><div class="code"><span class="type">int</span> total = 4 + 3; <span class="comment">// 7</span>\nhealth = health - 20;\n<span class="type">int</span> leftover = 10 % 3; <span class="comment">// 1</span>\n<span class="type">int</span> half = 5 / 2; <span class="comment">// 2, not 2.5</span></div><ul class="facts"><li><code>+</code> add · <code>-</code> subtract · <code>*</code> multiply · <code>/</code> divide · <code>%</code> remainder.</li><li><code>10 % 3</code> is 1 because 3 goes into 10 three times, with 1 left.</li><li><b>int / int</b> stays a whole number. <code>5 / 2</code> is 2. Use <code>double</code> if you need 2.5.</li><li><code>+</code> on two Strings joins them: <code>"Hi " + "Ava"</code> is <code>Hi Ava</code>.</li><li>Java does <code>*</code> and <code>/</code> before <code>+</code> and <code>-</code>, unless you use parentheses.</li></ul>`},
+      {title:'Comparison Operators', narration:'Comparisons ask a yes or no question and give a boolean. Use double equals to compare numbers. For text, equals is safer than double equals.', body:`<p>A comparison does not change the value. It answers <code>true</code> or <code>false</code>.</p><div class="code">health &gt; 0\nhealth == 100\nhealth != 0\nname.equals(<span class="str">"Ava"</span>)</div><ul class="facts"><li><code>==</code> equal · <code>!=</code> not equal.</li><li><code>&gt;</code> greater · <code>&lt;</code> less · <code>&gt;=</code> at least · <code>&lt;=</code> at most.</li><li>One <code>=</code> assigns. Two <code>==</code> compares. Mixing them up is a common bug.</li><li>Compare numbers with <code>==</code>. Compare Strings with <code>equals()</code>.</li><li>The result has type <b>boolean</b>. You can store it: <code>boolean alive = health &gt; 0;</code>.</li></ul>`},
+      {title:'And, Or, and Not', narration:'And is true only if both sides are true. Or is true if at least one side is true. Not flips true to false and false to true.', body:`<p>Logical operators combine true and false values. You will use them in if statements next realm.</p><div class="code">hasKey &amp;&amp; health &gt; 0 <span class="comment">// both must be true</span>\nhasKey || hasPotion <span class="comment">// either may be true</span>\n!questComplete <span class="comment">// opposite</span></div><ul class="facts"><li><code>&amp;&amp;</code> is <b>AND</b>. True only if the left and the right are both true.</li><li><code>||</code> is <b>OR</b>. True if at least one side is true.</li><li><code>!</code> is <b>NOT</b>. <code>!true</code> is false. <code>!false</code> is true.</li><li>Example: you may enter if you have the key <b>and</b> you are alive.</li><li>Parentheses help: <code>(hasKey || hasPotion) &amp;&amp; health &gt; 0</code>.</li></ul>`},
+      {title:'Expressions Produce Values', narration:'An expression is any code that produces a value. Java can print it, store it, or test it. If health is 100, then health minus 20 is 80.', body:`<p>If you can ask “what value is this?”, it is an <b>expression</b>.</p><div class="code">System.out.println(4 + 3); <span class="comment">// prints 7</span>\n<span class="type">boolean</span> alive = health &gt; 0;\nhealth = health - 20;</div><ul class="facts"><li><code>4 + 3</code> is an expression. Its value is 7.</li><li><code>health &gt; 0</code> is an expression. Its value is true or false.</li><li>You can print an expression, store it, or use it in a later lesson’s if statement.</li><li>A <b>statement</b> is a full instruction, usually ending with <code>;</code>.</li><li>Always ask: what type comes out? Number, text, or boolean?</li></ul>`}
+    ],
+    quiz:[
+      Q('Which type stores a decimal number?',['int','boolean','double','char'],2,'Use double for numbers with a decimal point.'),
+      Q('What is 10 % 3 in Java?',['0','1','3','13'],1,'% is remainder. 10 divided by 3 leaves 1.'),
+      Q('Which expression is true only if both sides are true?',['a || b','a && b','!a','a == b || true'],1,'&& is logical AND. Both sides must be true.')
+    ],
+    boss:{name:'Type Wraith', avatar:'👻', hp:90, intro:'The Type Wraith twists data. Cast with the correct type, operator, or comparison.',
+      defeat:'The Type Wraith unravels into tidy values.',
+      spells:[
+        {id:'typecast', name:'✦ Type Seal', hint:'Choose the right type · 22 damage', damage:22, heal:0, ward:false},
+        {id:'operator', name:'⚗ Operator Edge', hint:'Calculate a result · 18 damage + heal', damage:18, heal:10, ward:false},
+        {id:'boolean', name:'☾ Boolean Veil', hint:'True or false · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        typecast:[
+          Q('Which type stores whole numbers?',['double','int','String','boolean'],1),
+          Q('Which type stores true or false?',['int','char','boolean','double'],2),
+          Q('Which type stores text?',['String','int','boolean','float text'],0),
+          Q('Which value belongs in an int?',['3.14','true','7','"7" only'],2),
+          Q('Which line declares a decimal named price?',['int price = 9.99;','double price = 9.99;','boolean price = 9.99;','String price = 9.99;'],1),
+          Q('A char stores how many characters?',['Any number','Exactly one','Only digits','Zero'],1)
+        ],
+        operator:[
+          Q('What does 4 + 3 evaluate to?',['43','7','4 + 3','An error'],1),
+          Q('If health is 100, what is health - 20?',['10020','80','20','120'],1),
+          Q('Which operator gives the remainder?',['/','*','%','+'],2),
+          Q('Which operator multiplies?',['x','*','mul','^'],1),
+          Q('What is 10 / 2 in integer math?',['5','5.0','2','20'],0),
+          Q('Which line adds 5 coins?',['coins + 5;','coins = coins + 5;','add coins 5;','coins++;5'],1)
+        ],
+        boolean:[
+          Q('What type does health > 0 produce?',['int','String','boolean','double'],2),
+          Q('Which operator means logical AND?',['||','&&','==','!='],1),
+          Q('Which operator means logical OR?',['&&','||','%%','or'],1),
+          Q('What does !true evaluate to?',['true','false','0','error'],1),
+          Q('health == 100 compares using?',['Assignment','Equality','Text join','Division'],1),
+          Q('Which is a valid boolean value in Java?',['True','yes','true','"true"'],2)
+        ]
+      }
+    },
+    victory:{title:'The Logic Realm is Restored!', text:'You can store values, choose types, and combine operators. Comparisons and logic now answer true or false on command.', reward:'You earned <b>200 XP</b> and access to <b>The Control Realm</b>.', narration:'The Logic Realm is restored. Decisions and loops wait in the Control Realm.'}
+  },
+  {
+    id:'control', icon:'🔄', name:'The Control Realm', blurb:'Decisions, loops & repetition',
+    xp:300, accent:'#74e3b1',
+    mapNarration:'The Control Realm teaches if statements and loops. Beware the Infinite Loop.',
+    lessons:[
+      {title:'If and Else', narration:'If runs a block only when a condition is true. Else runs when that condition is false. The condition must be a boolean, usually in parentheses.', body:`<p>An <b>if</b> statement chooses a path. It runs extra lines only when a test is true.</p><div class="code"><span class="key">if</span> (health &gt; 0) {\n  System.out.println(<span class="str">"The hero lives!"</span>);\n} <span class="key">else</span> {\n  System.out.println(<span class="str">"Rest at camp."</span>);\n}</div><ul class="facts"><li>Write <code>if (condition)</code>. Parentheses are required.</li><li>The condition must be <b>boolean</b>: true or false.</li><li><b>else</b> is optional. It runs only when the if test is false.</li><li>Only one of the two blocks runs, never both.</li><li>Put the lines that belong to the choice inside <code>{ }</code>.</li></ul>`},
+      {title:'Else If for More Paths', narration:'Use else if when you have more than two choices. Java checks from the top. The first true condition wins. The final else is the fallback.', body:`<p>When there are many ranges or cases, chain them.</p><div class="code"><span class="key">if</span> (score &gt;= 90) {\n  rank = <span class="str">"Gold"</span>;\n} <span class="key">else if</span> (score &gt;= 70) {\n  rank = <span class="str">"Silver"</span>;\n} <span class="key">else</span> {\n  rank = <span class="str">"Bronze"</span>;\n}</div><ul class="facts"><li>Java tests from <b>top to bottom</b>.</li><li>As soon as one condition is true, it runs that block and <b>skips the rest</b>.</li><li>If score is 95, only Gold runs, even though 95 is also greater than 70.</li><li>Put the most specific tests first (highest score, special cases).</li><li>The last <code>else</code> catches everything that did not match.</li></ul>`},
+      {title:'For Loops Count Repeats', narration:'A for loop is best when you know how many times to repeat. It has three parts: start, keep going while, and change each time. i plus plus adds one.', body:`<p>A <b>for</b> loop repeats a block a planned number of times.</p><div class="code"><span class="key">for</span> (<span class="type">int</span> turn = 1; turn &lt;= 3; turn++) {\n  System.out.println(<span class="str">"Attack "</span> + turn);\n}</div><div class="callout">This prints Attack 1, then Attack 2, then Attack 3.</div><ul class="facts"><li>Part 1: <code>int turn = 1</code> — start here.</li><li>Part 2: <code>turn &lt;= 3</code> — keep looping while this is true.</li><li>Part 3: <code>turn++</code> — after each pass, add 1.</li><li><code>for (int i = 0; i &lt; 3; i++)</code> runs <b>3</b> times: i is 0, 1, then 2.</li><li>Use for when you can say the count: “do this 10 times.”</li></ul>`},
+      {title:'While Loops Wait on a Condition', narration:'A while loop repeats as long as its condition is true. Change something inside the loop so it can become false. If you forget, you get an infinite loop.', body:`<p>A <b>while</b> loop is good when you do not know the count in advance. You know the stop rule instead.</p><div class="code"><span class="type">int</span> mana = 3;\n<span class="key">while</span> (mana &gt; 0) {\n  System.out.println(<span class="str">"Cast"</span>);\n  mana--;\n}</div><ul class="facts"><li>Check the condition. If true, run the body. Then check again.</li><li>If the condition starts false, the body runs <b>zero</b> times.</li><li>You must <b>update</b> a variable inside, or the test never changes.</li><li><code>mana--</code> subtracts 1. Without it, <code>mana &gt; 0</code> stays true forever.</li><li>An <b>infinite loop</b> never stops. That is this realm’s boss.</li></ul>`},
+      {title:'Blocks Use Curly Braces', narration:'Curly braces group the lines that belong to an if or a loop. If you skip them, only the next line is controlled. Indent so humans can see the group.', body:`<p>A <b>block</b> is the code between <code>{</code> and <code>}</code>.</p><div class="code"><span class="key">if</span> (hasKey) {\n  openGate();\n  System.out.println(<span class="str">"Enter"</span>);\n}</div><ul class="facts"><li>Both lines inside the braces run only when <code>hasKey</code> is true.</li><li>If you omit braces, only the <b>next one line</b> belongs to the if.</li><li>Beginners should always use braces, even for one line.</li><li>Every <code>{</code> needs a matching <code>}</code>.</li><li>Indent the inside lines so the group is easy to see.</li></ul>`},
+      {title:'If, For, or While?', narration:'Use if to choose once. Use for when the count is known. Use while when you wait until a condition becomes false. Always give a loop a way to stop.', body:`<p>Pick the tool that matches the job.</p><div class="callout">Choose once → if · Repeat a known count → for · Repeat until a stop rule → while</div><ul class="facts"><li><b>if / else if / else</b>: one decision, not a repeat.</li><li><b>for</b>: you know the number of turns, or you walk through 0 to n.</li><li><b>while</b>: “keep going while mana is above 0,” even if you are not sure how many casts that is.</li><li>You can put an if <b>inside</b> a loop if each turn needs a choice.</li><li>To stop early, you can use <code>break</code>. Learn it after the basics feel easy.</li></ul>`}
+    ],
+    quiz:[
+      Q('Which keyword starts a decision in Java?',['loop','if','when','decide'],1,'if checks a condition and runs a block when it is true.'),
+      Q('Which loop is best when you know the number of repeats?',['while','for','forever','if'],1,'for loops shine when the count is known in advance.'),
+      Q('What makes a while loop stop?',['A semicolon','The condition becoming false','A String','A class name'],1,'The loop continues only while the condition is true.')
+    ],
+    boss:{name:'Infinite Loop', avatar:'♾️', hp:100, intro:'The Infinite Loop never yields unless your conditions are exact. Choose a control spell.',
+      defeat:'The Infinite Loop finally reaches a false condition and unravels.',
+      spells:[
+        {id:'iff', name:'✦ If Guard', hint:'Choose a path · 20 damage', damage:20, heal:0, ward:false},
+        {id:'forloop', name:'⚗ For Barrage', hint:'Repeat a known count · 24 damage', damage:24, heal:6, ward:false},
+        {id:'whileloop', name:'☾ While Ward', hint:'Repeat until safe · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        iff:[
+          Q('Which header is valid?',['if health > 0','if (health > 0)','if health > 0 then','when (health > 0)'],1),
+          Q('When does else run?',['Always','When the if condition is false','Before if','Never'],1),
+          Q('What type should an if condition produce?',['int','boolean','String','void'],1),
+          Q('Which runs if score is 95 in an if (score >= 90) branch?',['The else only','The if block','Both','Neither'],1),
+          Q('else if is used when?',['You need extra paths','You want an infinite loop','You declare a class','You print text'],0),
+          Q('Braces { } around an if do what?',['End the program','Group the controlled lines','Create a variable','Import Java'],1)
+        ],
+        forloop:[
+          Q('In for (int i = 0; i < 3; i++), how many times does the body run?',['0','2','3','infinite'],2),
+          Q('Which part changes i each pass?',['int i = 0','i < 3','i++','for'],2),
+          Q('Which keyword starts this counted loop?',['while','for','loop','repeat'],1),
+          Q('What does i++ mean?',['Set i to 0','Add 1 to i','Multiply i','Stop the loop'],1),
+          Q('A for loop needs a condition that can become?',['A String','false','a class','void'],1),
+          Q('Which prints 1 2 3?',['for (int t = 1; t <= 3; t++)','for (int t = 3; t < 1; t++)','for t in 1..3','loop 3'],0)
+        ],
+        whileloop:[
+          Q('A while loop repeats while its condition is?',['false','true','null','printed'],1),
+          Q('Which header is valid?',['while health','while (mana > 0)','while mana > 0 do','loop while mana'],1),
+          Q('Forgetting to change mana in while (mana > 0) can cause?',['Faster code','An infinite loop','A String','A comment'],1),
+          Q('mana-- means?',['Increase mana','Decrease mana by 1','Reset mana','Print mana'],1),
+          Q('while vs for: while is better when?',['The count is unknown','You need a class','You print once','You comment code'],0),
+          Q('Which must be true to enter while (alive)?',['alive is false','alive is true','alive is 7','alive is "yes"'],1)
+        ]
+      }
+    },
+    victory:{title:'The Control Realm is Restored!', text:'You can branch with if and repeat with for and while. The Infinite Loop is bound—for now.', reward:'You earned <b>300 XP</b> and access to <b>The Method Realm</b>.', narration:'The Control Realm is restored. Methods will let you reuse your spells.'}
+  },
+  {
+    id:'method', icon:'📜', name:'The Method Realm', blurb:'Methods, parameters & returns',
+    xp:400, accent:'#ffc857',
+    mapNarration:'The Method Realm teaches reusable spells: parameters go in, a return value comes out.',
+    lessons:[
+      {title:'What a Method Is', narration:'A method is a named list of instructions. You run it by writing its name and parentheses. Methods stop you from copying the same lines again and again.', body:`<p>A <b>method</b> is a reusable spell: a block you can call by name.</p><div class="code"><span class="key">public static void</span> greet() {\n  System.out.println(<span class="str">"Welcome, hero!"</span>);\n}\ngreet();</div><ul class="facts"><li><b>Define</b> the method once (the header plus the body in braces).</li><li><b>Call</b> it with the name and <code>()</code>: <code>greet();</code>.</li><li>Without <code>()</code>, Java does not run it. <code>greet;</code> is not a call.</li><li>Methods keep <code>main</code> short and make names that describe the action.</li><li>In these lessons we use <code>public static</code> so you can call methods from main easily.</li></ul>`},
+      {title:'Parameters Are Inputs', narration:'A parameter is a variable the method receives. An argument is the actual value you pass in the call. Types must match. Order matters.', body:`<p>Parameters let one method work with many values.</p><div class="code"><span class="key">public static void</span> greet(String name) {\n  System.out.println(<span class="str">"Welcome, "</span> + name);\n}\ngreet(<span class="str">"Ava"</span>);</div><div class="callout"><b>Argument</b> = the value you send. <b>Parameter</b> = the name that receives it.</div><ul class="facts"><li>In <code>greet(String name)</code>, <code>name</code> is the parameter.</li><li>In <code>greet("Ava")</code>, <code>"Ava"</code> is the argument.</li><li><code>sum(int a, int b)</code> needs <b>two</b> int arguments, in that order.</li><li>Wrong type fails: <code>show(int hp)</code> wants <code>show(100)</code>, not <code>show("100")</code> as an int.</li><li>Inside the method, use the parameter name like any other variable.</li></ul>`},
+      {title:'Return Sends a Result Back', narration:'Return hands a value back to the caller. The type in the header must match what you return. You can store that result in a variable.', body:`<p>Some methods answer a question. They <b>return</b> a value.</p><div class="code"><span class="key">public static int</span> heal(<span class="type">int</span> current) {\n  <span class="key">return</span> current + 10;\n}\nhealth = heal(health);</div><ul class="facts"><li>The word before the method name is the <b>return type</b>: here <code>int</code>.</li><li><code>return current + 10;</code> ends the method and sends that number back.</li><li>If <code>current</code> is 90, <code>heal(90)</code> gives 100.</li><li>Store it: <code>health = heal(health);</code>. If you forget to assign, the result is thrown away.</li><li>The returned type must match the header. An <code>int</code> method cannot return a String.</li></ul>`},
+      {title:'Void Means No Value Back', narration:'Void means the method does a job but does not return a value. Use void to print or change something. Do not assign a void call to a variable.', body:`<p><code>void</code> methods are actions, not answers.</p><div class="code"><span class="key">public static void</span> showHealth(<span class="type">int</span> hp) {\n  System.out.println(hp);\n}\nshowHealth(100);</div><ul class="facts"><li><b>void</b> = “this method returns nothing.”</li><li>Good uses: print, save, show a message, draw a line.</li><li>You <b>cannot</b> write <code>int x = showHealth(100);</code>.</li><li>A void method may still have parameters. Inputs in, no value out.</li><li>If you need a new number, do not use void. Use a return type like <code>int</code>.</li></ul>`},
+      {title:'Main Starts the Program', narration:'Java starts in main. Main can call your other methods. Keep main short. Put the details in named methods.', body:`<p><code>main</code> is a method too. It is special only because Java starts there.</p><div class="code"><span class="key">public static void</span> main(String[] args) {\n  startQuest();\n}\n<span class="key">public static void</span> startQuest() {\n  System.out.println(<span class="str">"Quest begins"</span>);\n}</div><ul class="facts"><li>The usual header is <code>public static void main(String[] args)</code>.</li><li>From main, call your methods in the order the story should happen.</li><li>One class can contain many methods. Main is just the first call.</li><li>Beginners: put helper methods in the same class as main.</li><li>If main is empty, the program starts and then immediately ends.</li></ul>`},
+      {title:'Match the Header to the Call', narration:'The call must match the definition: name, number of arguments, and types. If method A calls method B, A waits until B returns.', body:`<p>Think of a checklist every time you write a call.</p><div class="callout">Same name · Matching arguments · Matching return use</div><ul class="facts"><li>Name must match, including capital letters.</li><li>Count of arguments must match the parameters.</li><li>Each argument’s type must match that parameter.</li><li>If the method returns an int, you may store it in an int variable.</li><li>If it is void, just call it as a statement: <code>greet("Ava");</code>.</li></ul>`}
+    ],
+    quiz:[
+      Q('What does a method parameter do?',['Prints the class','Receives an input value','Deletes a variable','Stops Java'],1,'Parameters are inputs the caller provides.'),
+      Q('Which keyword sends a result back?',['void','return','static','class'],1,'return hands a value back to the caller.'),
+      Q('void in a method header means?',['It returns an int','It returns no value','It is private','It loops forever'],1,'void methods perform an action without returning a value.')
+    ],
+    boss:{name:'Void Specter', avatar:'🕸️', hp:110, intro:'The Void Specter swallows return values. Call your methods with the right parameters.',
+      defeat:'The Void Specter returns null no more and fades.',
+      spells:[
+        {id:'call', name:'✦ Method Call', hint:'Invoke by name · 22 damage', damage:22, heal:0, ward:false},
+        {id:'returnv', name:'⚗ Return Gift', hint:'Bring a value back · 16 damage + heal', damage:16, heal:12, ward:false},
+        {id:'param', name:'☾ Parameter Bind', hint:'Pass the right input · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        call:[
+          Q('Which line calls a method named greet with no inputs?',['greet;','greet();','call greet','void greet()'],1),
+          Q('Methods help you?',['Avoid reusable code','Reuse a named block of instructions','Delete Java','Skip semicolons'],1),
+          Q('Where does a Java program usually start?',['greet()','main','println','return'],1),
+          Q('Which is a valid method header start?',['function greet','public static void greet()','def greet():','method greet'],1),
+          Q('To use a method you usually?',['Compile comments','Call it by name with ()','Rename the class','Delete main'],1),
+          Q('Parentheses after a method name hold?',['The class only','Arguments, if any','The file path','CSS'],1)
+        ],
+        returnv:[
+          Q('Which header can return a whole number?',['void add()','int add()','String void()','return int'],1),
+          Q('What does return current + 10; send back if current is 90?',['current','100','10','void'],1),
+          Q('Can you store the result of a void method in a variable?',['Yes always','No','Only in main','Only with String'],1),
+          Q('return must match?',['The file name','The declared return type','The package color','The loop count'],1),
+          Q('Which keyword exits a method with a value?',['break','return','exit','yield int'],1),
+          Q('int heal(int hp) should return?',['A String','An int','void','a class'],1)
+        ],
+        param:[
+          Q('In greet(String name), name is a?',['Return type','Parameter','Class','Loop'],1),
+          Q('In greet("Ava"), "Ava" is an?',['Parameter name','Argument','Package','Comment'],1),
+          Q('How many arguments does sum(int a, int b) expect?',['0','1','2','3'],2),
+          Q('Argument types should?',['Always be String','Match the parameter types','Be void','Be comments'],1),
+          Q('Which call matches void show(int hp)?',['show("100");','show(100);','show();','show(true, 1);'],1),
+          Q('Parameters make methods?',['Unable to print','Reusable with different inputs','Slower forever','Private only'],1)
+        ]
+      }
+    },
+    victory:{title:'The Method Realm is Restored!', text:'You can write methods, pass parameters, and return results. Your spellbook is now reusable.', reward:'You earned <b>400 XP</b> and access to <b>The Structure Realm</b>.', narration:'The Method Realm is restored. Arrays, classes, and objects wait ahead.'}
+  },
+  {
+    id:'structure', icon:'🧩', name:'The Structure Realm', blurb:'Arrays, classes & objects',
+    xp:500, accent:'#ef8e36',
+    mapNarration:'The Structure Realm builds collections and objects. Guard against the Null Knight.',
+    lessons:[
+      {title:'Arrays Are Numbered Lists', narration:'An array holds many values of the same type. The first item is at index zero. Square brackets declare the array and also pick an item.', body:`<p>An <b>array</b> is a list of values that share one type.</p><div class="code"><span class="type">int[]</span> chests = {10, 25, 5};\nSystem.out.println(chests[0]); <span class="comment">// 10</span>\nSystem.out.println(chests[1]); <span class="comment">// 25</span></div><ul class="facts"><li>Declare with <code>int[]</code> (type plus square brackets).</li><li>Fill with a list in braces: <code>{10, 25, 5}</code>.</li><li>Indexes start at <b>0</b>. First item is <code>chests[0]</code>.</li><li>For 3 items, valid indexes are 0, 1, and 2. <code>chests[3]</code> is an error.</li><li>All items should match the type. This int array stores whole numbers.</li></ul>`},
+      {title:'Length and Looping Through Arrays', narration:'array.length is how many items there are. The last index is length minus one. A for loop from zero until i is less than length visits each item.', body:`<p>You almost never type the size by hand. Ask the array.</p><div class="code"><span class="key">for</span> (<span class="type">int</span> i = 0; i &lt; chests.length; i++) {\n  System.out.println(chests[i]);\n}</div><ul class="facts"><li><code>chests.length</code> is a <b>field</b> (no parentheses). It is the count of items.</li><li>Last index = <code>length - 1</code>. Length 4 → last index 3.</li><li>The loop test is usually <code>i &lt; array.length</code>, not <code>i &lt;= array.length</code>.</li><li>This pattern prints every item in order.</li><li>You can also change an item: <code>chests[0] = 99;</code>.</li></ul>`},
+      {title:'A Class Is a Blueprint', narration:'A class describes a kind of thing. Fields are the data each object will have. Later, methods can be the actions. The class is the recipe, not the cake.', body:`<p>A <b>class</b> names a type you invent, like Hero.</p><div class="code"><span class="key">public class</span> <span class="type">Hero</span> {\n  String name;\n  <span class="type">int</span> health;\n}</div><ul class="facts"><li>The class is a <b>blueprint</b>. It does not store Ava’s health by itself.</li><li><b>Fields</b> (also called instance variables) are the data: name, health.</li><li>You can add methods later, like <code>heal()</code>, inside the same class.</li><li>The file is often named Hero.java to match the class name.</li><li>One class, many objects: many heroes can use the same blueprint.</li></ul>`},
+      {title:'New Creates an Object', narration:'An object is one real example of a class. The word new builds it. Each object has its own field values.', body:`<p><b>new</b> constructs one object from the class.</p><div class="code">Hero ava = <span class="key">new</span> Hero();\nava.name = <span class="str">"Ava"</span>;\nava.health = 100;\nHero bob = <span class="key">new</span> Hero();\nbob.health = 80;</div><ul class="facts"><li><code>Hero ava</code> is a <b>reference</b> variable. It can point to a Hero object.</li><li><code>new Hero()</code> actually builds the object in memory.</li><li>Ava and Bob are two objects. Changing Bob’s health does not change Ava’s.</li><li>Until you assign fields, they have default values (0, false, or null).</li><li>You need <code>new</code>. <code>Hero ava;</code> alone does not create the object yet.</li></ul>`},
+      {title:'The Dot Reaches Fields and Methods', narration:'Use a dot after the object name to reach a field or call a method. ava.health is Ava’s health. ava.heal() would run heal on Ava.', body:`<p><b>Dot notation</b> means “this object’s thing.”</p><div class="code">ava.health = ava.health - 12;\nSystem.out.println(ava.name);</div><ul class="facts"><li><code>ava.name</code> reads the name field on that object.</li><li><code>ava.health = 90</code> writes a new value on that object.</li><li>A method on the object looks like <code>ava.heal();</code>.</li><li>The left side of the dot must be an object (or a class name for static members, later).</li><li>Do not put a space in the name. It is <code>ava.health</code>, not <code>ava health</code>.</li></ul>`},
+      {title:'Null Means No Object Yet', narration:'Null means this reference does not point to an object. Using a dot on null causes a Null Pointer Exception. Check that the reference is not null before you use it.', body:`<p><code>null</code> is Java’s way to say “no object here.”</p><div class="callout">Safe pattern: <code>if (hero != null) { ... }</code></div><ul class="facts"><li>A reference can hold an object <b>or</b> <code>null</code>.</li><li><code>hero != null</code> is true when there is an object to use.</li><li><code>hero.heal()</code> when hero is null → <b>NullPointerException</b>.</li><li>null is not 0, and it is not an empty String <code>""</code>.</li><li>Before you use a dot, be sure the variable was assigned with <code>new</code> (or a real object).</li></ul>`}
+    ],
+    quiz:[
+      Q('What is the index of the first array item?',['1','0','length','-1'],1,'Java arrays are zero-based. The first item is at index 0.'),
+      Q('new Hero() does what?',['Deletes a class','Creates an object from the Hero class','Prints Hero','Returns void always'],1,'new constructs an instance of the class.'),
+      Q('Using a method on null typically causes?',['A successful print','NullPointerException','A slower loop','A comment'],1,'A null reference has no object to receive the call.')
+    ],
+    boss:{name:'Null Knight', avatar:'🛡️', hp:120, intro:'The Null Knight rides empty references. Index arrays carefully and never dereference null.',
+      defeat:'The Null Knight drops a valid object reference and kneels.',
+      spells:[
+        {id:'index', name:'✦ Index Lance', hint:'chests[0] · 24 damage', damage:24, heal:0, ward:false},
+        {id:'object', name:'⚗ Object Forge', hint:'new Class() · 18 damage + heal', damage:18, heal:10, ward:false},
+        {id:'nullcheck', name:'☾ Null Check', hint:'hero != null · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        index:[
+          Q('int[] n = {8, 2, 5}; what is n[1]?',['8','2','5','3'],1),
+          Q('The last index of an array with length 4 is?',['4','3','0','5'],1),
+          Q('Which declares an int array?',['int chests;','int[] chests;','array int chests;','Integer[] only'],1),
+          Q('chests.length is?',['A method with ()','A field with the item count','Always 0','The first value'],1),
+          Q('Valid index for length 3?',['3','-1','2','4'],2),
+          Q('Arrays store items of?',['Any mixed types always','Usually one declared type','Only Strings','Only objects'],1)
+        ],
+        object:[
+          Q('Which creates a Hero object?',['Hero ava;','Hero ava = new Hero();','new = Hero ava;','Hero() ava'],1),
+          Q('A class is best described as a?',['Running program','Blueprint for objects','Single number','Comment'],1),
+          Q('ava.name uses?',['A loop','Dot notation to reach a field','A package import','An array index only'],1),
+          Q('Each object can have?',['The same field values always','Its own field values','No methods','Null classes only'],1),
+          Q('Fields in a class store?',['Only methods','Data for each object','The JVM version','CSS'],1),
+          Q('Which keyword constructs an object?',['return','new','void','static only'],1)
+        ],
+        nullcheck:[
+          Q('null means?',['Zero','No object in this reference','Empty String always','True'],1),
+          Q('hero != null is true when?',['hero has an object','hero is null','hero is 0','hero is void'],0),
+          Q('Calling a method on null causes?',['Silent success','NullPointerException','A compile of CSS','Infinite XP'],1),
+          Q('Which check is a valid ward?',['if (hero = null)','if (hero != null)','if (null.hero)','if hero'],1),
+          Q('A reference type can hold?',['Only int','An object or null','Only true','A primitive always'],1),
+          Q('Before ava.heal(), you should know?',['ava is not null','ava is void','The array length is -1','main was deleted'],0)
+        ]
+      }
+    },
+    victory:{title:'The Structure Realm is Restored!', text:'You can store lists in arrays and model the world with classes and objects. Null no longer surprises you.', reward:'You earned <b>500 XP</b> and access to <b>The Prompting Realm</b>.', narration:'The Structure Realm is restored. The Java Bug Lord waits in the Prompting Realm.'}
+  },
+  {
+    id:'prompting', icon:'🤖', name:'The Prompting Realm', blurb:'AI prompting & responsible debugging',
+    xp:650, accent:'#ef5b67',
+    mapNarration:'The final realm. Prompt with precision, debug with evidence, and face the Java Bug Lord.',
+    lessons:[
+      {title:'Write a Clear Prompt', narration:'A good prompt is a spec: the goal, that you need Java, any rules, and an example of input and output. Vague wishes produce messy code.', body:`<p>Treat a prompt like a short assignment sheet, not a wish.</p><div class="callout"><b>Pattern:</b> Goal + “in Java” + rules + example</div><ul class="facts"><li><b>Weak:</b> “Fix my code” or “Make a game.”</li><li><b>Strong:</b> “Write a Java method that returns the larger of two ints. Do not use Math.max. Include a main demo.”</li><li>Say <b>Java</b>, not just “code,” so you do not get JavaScript.</li><li>List constraints: no extra libraries, beginner syntax, comments on tricky lines.</li><li>Give a sample: input 3 and 8, output 8.</li><li>Ask for one small piece at a time (one method), not a whole app at once.</li></ul>`},
+      {title:'Give Evidence When Something Breaks', narration:'When you debug, paste the code, the full error, what you already tried, and what you expected. A stack trace shows the file and line that failed.', body:`<p>Helpers cannot see your screen. Send the facts.</p><div class="callout">1. The code · 2. The full error · 3. What you tried · 4. What should happen</div><ul class="facts"><li>Copy the <b>exact</b> error text, not “it doesn’t work.”</li><li>A <b>stack trace</b> lists methods and line numbers. The first Java line of yours is usually the clue.</li><li>Write expected vs actual: “I expected 7, I got 43.”</li><li>Say what you already changed so you do not loop on the same idea.</li><li>Do not paste passwords, API keys, or private data.</li></ul>`},
+      {title:'Check AI Code Against Real Java', narration:'Language models can invent methods that do not exist. If you see console dot log in Java, reject it. Real Java printing is System dot out dot print-line.', body:`<p>You already know real Java. Use it as a filter.</p><ul class="facts"><li>Java print: <code>System.out.println</code>. Not <code>console.log</code>, not Python <code>print</code>.</li><li>Check names, types, and semicolons before you run anything.</li><li>If a method looks new, search your lessons or docs. Invented APIs are common.</li><li>Imports must match real classes. Random imports are a warning sign.</li><li>If you do not understand a line, ask “what does this line do?” or delete it and write a simpler version.</li></ul>`},
+      {title:'Debug With Tests, Not Guesses', narration:'Change one thing at a time. Print values. Make the bug happen again on purpose. Guessing at random feeds the Bug Lord.', body:`<p>Debugging is a small experiment, not a panic.</p><div class="code">System.out.println(<span class="str">"health = "</span> + health);</div><ul class="facts"><li><b>Reproduce</b> first: make the bug happen the same way twice.</li><li>Print (or inspect) the values you think are wrong.</li><li>Change <b>one</b> thing, then run again.</li><li>If the error is NullPointerException, find which name is null.</li><li>A tiny program that only shows the bug is easier to fix than a huge file.</li></ul>`},
+      {title:'Stay in Charge of the Code', narration:'Do not paste secrets. Do not turn in work you cannot explain. You are the programmer. The model is a helper.', body:`<p>AI is a familiar, not the mage.</p><div class="callout">No secrets · Understand every line you keep · Follow your class honesty rules</div><ul class="facts"><li>Never put API keys, passwords, or private student data in a prompt.</li><li>Keep a line only if you can say what it does.</li><li>If school work must be your own, follow that policy. Ask your teacher what help is allowed.</li><li>You still run the compiler. You still test. You still own the result.</li><li>Rewrite copied snippets in your own style so you actually learned them.</li></ul>`},
+      {title:'Name the Bug, Then Fix It', narration:'Unclear goals and ignored errors create the Bug Lord. Say what is wrong in one sentence. Shrink the example. Fix it. Then test.', body:`<p>Use every realm together: types, ifs, methods, objects, and a precise question.</p><ul class="facts"><li>Write one sentence: “health stays 100 after damage because I never assigned the new value.”</li><li>Make the smallest code that still shows the problem.</li><li>Fix that small case. Then put the fix back into the full program.</li><li>Run it. Compare expected output to actual output.</li><li>If AI helps, treat its answer as a draft. You decide what is true.</li></ul>`}
+    ],
+    quiz:[
+      Q('Which prompt is strongest?',['Fix my code','Write a Java method that returns the max of two ints, with a main example','Make Java','Do it'],1,'Specific goal, language, and example beat a vague wish.'),
+      Q('When debugging with AI, you should include?',['Only the class name','The code, the error, and the expected result','A password','Nothing'],1,'Evidence lets the helper aim at the real bug.'),
+      Q('If AI suggests console.log in Java, you should?',['Use it','Reject it; Java uses System.out.println','Add a password','Delete main'],1,'Stay loyal to real Java, not another language’s spells.')
+    ],
+    boss:{name:'Java Bug Lord', avatar:'🐞', hp:140, intro:'The Java Bug Lord thrives on vague prompts and ignored stack traces. Be precise.',
+      defeat:'The Java Bug Lord compiles into a unit test and vanishes.',
+      spells:[
+        {id:'prompt', name:'✦ Precise Prompt', hint:'Goal + constraints · 26 damage', damage:26, heal:0, ward:false},
+        {id:'debug', name:'⚗ Debug Trace', hint:'Print the evidence · 18 damage + heal', damage:18, heal:12, ward:false},
+        {id:'ethics', name:'☾ Responsible Guard', hint:'No secrets, understand the code · blocks 1 hit', damage:0, heal:0, ward:true}
+      ],
+      questions:{
+        prompt:[
+          Q('A strong prompt should include?',['Only emojis','A clear goal and constraints','Your password','Nothing'],1),
+          Q('Which is more useful?',['Make a game','Create a Java class Hero with name and health fields','Java please','Fix'],1),
+          Q('Asking for an example input and output helps?',['The model guess the language only','Specify expected behavior','Hide errors','Skip types'],1),
+          Q('Vague prompts tend to produce?',['Guaranteed perfect code','Mismatched or invented APIs','Faster CPUs','Fewer comments'],1),
+          Q('Mentioning “Java, not JavaScript” is a?',['Waste','Useful constraint','Null check','Loop'],1),
+          Q('The best follow-up after a bad snippet is?',['Insult the model','Point to the exact wrong line and expected behavior','Paste secrets','Delete the question'],1)
+        ],
+        debug:[
+          Q('A stack trace is useful because it?',['Hides the file name','Shows where the program failed','Replaces tests','Stores passwords'],1),
+          Q('A good debug print looks like?',['asdf','System.out.println("health = " + health);','console.log health','alert(health)'],1),
+          Q('Change how many things at a time when bisecting a bug?',['All of them','One','None','Only class names'],1),
+          Q('Reproducing a bug means?',['Seeing it happen again on purpose','Restarting Windows only','Deleting tests','Ignoring the error'],0),
+          Q('If the error is NullPointerException, inspect?',['A loop count only','A reference that might be null','CSS','The music volume'],1),
+          Q('Expected vs actual output is?',['Useless','A core debug fact','A type of comment ward only','A boolean operator'],1)
+        ],
+        ethics:[
+          Q('Should you paste API keys into a prompt?',['Yes','No','Only on Tuesdays','If the bug is hard'],1),
+          Q('You should keep AI code only if you?',['Like the font','Understand what it does','Saw an emoji','Cleared a realm'],1),
+          Q('School work and AI help should follow?',['No rules','Your course’s honesty policy','The Bug Lord’s wishes','Random blogs only'],1),
+          Q('The human’s role is to?',['Blindly paste','Review, test, and own the result','Avoid learning','Hide errors'],1),
+          Q('Responsible debugging prefers?',['Guessing forever','Evidence and small tests','Secret dumping','Skipping compile errors'],1),
+          Q('A familiar (AI) is helpful when you?',['Stay in charge of the spell','Let it ship secrets','Skip Java entirely','Ignore types'],0)
+        ]
+      }
+    },
+    victory:{title:'The Java Bug Lord Falls!', text:'Six realms stand with you. You can read a computer, write Java, steer control flow, craft methods, shape objects, and prompt with care.', reward:'You earned <b>650 XP</b> and the title <b>Codebound Archmage</b>. The bugs will return—keep practicing.', narration:'The Java Bug Lord is defeated. You are a Codebound Archmage. Keep practicing your spells.'}
+  }
+];
+
+const realmById = Object.fromEntries(realms.map(r => [r.id, r]));
+function realmIndex(id){ return realms.findIndex(r => r.id === id); }
+function isCleared(id){ return !!state[id]; }
+function isUnlocked(id){
+  const i = realmIndex(id);
+  if (i <= 0) return true;
+  return isCleared(realms[i - 1].id);
+}
+function currentRealm(){ return realmById[realmId]; }
+
+function save(){
+  localStorage.setItem('codeboundState', JSON.stringify({
+    ...state,
+    cleared: state.computing,
+    logicComplete: state.logic,
+    controlComplete: state.control
+  }));
+  document.getElementById('xp').textContent = state.xp;
+  const lv = state.prompting ? 7 : state.structure ? 6 : state.method ? 5 : state.control ? 4 : state.logic ? 3 : state.computing ? 2 : 1;
+  document.getElementById('level').textContent = lv;
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'map') renderMap();
+  if (id === 'lesson') renderLesson();
+  const r = currentRealm();
+  const lines = {
+    home: 'Welcome, Code Apprentice. Every line of Java is a spell waiting to be forged.',
+    map: r && isUnlocked(r.id) ? (r.mapNarration || 'Choose a realm on the world map.') : 'Choose a realm on the world map. Clear each quest to unlock the next.',
+    lesson: r.lessons[lesson].narration,
+    realmQuiz: 'Answer at least two of these three questions to earn the right to challenge the boss.',
+    battle: r.boss.intro,
+    victory: r.victory.narration
+  };
+  narrate(lines[id] || '');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderMap(){
+  document.getElementById('realmGrid').innerHTML = realms.map((r, i) => {
+    const unlocked = isUnlocked(r.id);
+    const done = isCleared(r.id);
+    const status = done ? '✓ Cleared' : unlocked ? '✦ Begin quest' : '🔒 Locked';
+    return `<button type="button" class="realm ${unlocked ? 'open' : 'locked'} ${done ? 'done' : ''}" ${unlocked ? '' : 'disabled'} data-realm="${r.id}" style="--accent:${r.accent}"><div class="realm-icon"><svg viewBox="0 0 64 64"><use href="#logo-${r.id}"/></svg></div><h3>${r.name}</h3><p>${r.blurb}</p><span class="tag">${status}</span></button>`;
+  }).join('');
+}
+
+function startRealm(id){
+  realmId = id;
+  lesson = 0;
+  show('lesson');
+}
+
+function renderLesson(){
+  const r = currentRealm();
+  const l = r.lessons[lesson];
+  document.getElementById('lessonCrumb').textContent = `Realm ${realmIndex(r.id)+1} · ${r.name}`;
+  document.getElementById('lessonNum').textContent = lesson + 1;
+  document.getElementById('lessonTotal').textContent = r.lessons.length;
+  document.getElementById('lessonProgress').style.width = ((lesson + 1) / r.lessons.length * 100) + '%';
+  document.getElementById('lessonTitle').textContent = l.title;
+  document.getElementById('lessonBody').innerHTML = l.body;
+  document.getElementById('dots').innerHTML = r.lessons.map((_, i) => `<i class="dot ${i === lesson ? 'on' : ''}"></i>`).join('');
+  document.getElementById('nextLesson').textContent = lesson === r.lessons.length - 1 ? 'Start Checkpoint →' : 'Continue →';
+}
+
+function nextLesson(){
+  const r = currentRealm();
+  if (lesson < r.lessons.length - 1) {
+    lesson++;
+    renderLesson();
+    narrate(r.lessons[lesson].narration);
+  } else {
+    resetMiniQuiz();
+    show('realmQuiz');
+  }
+}
+
+let miniIndex = 0, miniScore = 0, miniOrder = [], miniLive = null;
+function resetMiniQuiz(){
+  const r = currentRealm();
+  miniOrder = shuffle(r.quiz.map((_, i) => i));
+  miniIndex = 0;
+  miniScore = 0;
+  miniLive = null;
+  renderMiniQuiz();
+}
+function renderMiniQuiz(){
+  const r = currentRealm();
+  const src = r.quiz[miniOrder[miniIndex]];
+  miniLive = shuffleQuestion(src);
+  document.getElementById('quizCrumb').textContent = `Realm ${realmIndex(r.id)+1} · Knowledge Checkpoint`;
+  document.getElementById('miniProgress').textContent = `Question ${miniIndex+1} of ${r.quiz.length} · ${miniScore} correct`;
+  document.getElementById('miniProgressBar').style.width = ((miniIndex + 1) / r.quiz.length * 100) + '%';
+  document.getElementById('miniQuestion').textContent = miniLive.question;
+  const box = document.getElementById('miniAnswers');
+  box.innerHTML = '';
+  miniLive.answers.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.className = 'answer';
+    b.type = 'button';
+    b.textContent = a;
+    b.addEventListener('click', () => miniAnswer(b, i === miniLive.correct));
+    box.appendChild(b);
+  });
+  document.getElementById('miniResult').className = 'result';
+}
+function miniAnswer(el, correct){
+  document.querySelectorAll('#miniAnswers .answer').forEach(b => b.disabled = true);
+  const q = miniLive;
+  const result = document.getElementById('miniResult');
+  result.className = 'result show';
+  const btn = document.createElement('button');
+  btn.className = 'button small';
+  btn.type = 'button';
+  if (correct) {
+    miniScore++;
+    el.classList.add('good');
+    result.innerHTML = '<b>Correct.</b> ' + q.why;
+    const last = miniIndex === miniOrder.length - 1;
+    btn.textContent = last ? 'Face the Boss →' : 'Next Question →';
+    btn.addEventListener('click', last ? finishMiniQuiz : nextMiniQuestion);
+    narrate('Correct. ' + q.why);
+  } else {
+    el.classList.add('bad');
+    result.innerHTML = '<b>Not quite.</b> ' + q.why + ' Try this question again. The answers will be in a new order.';
+    btn.textContent = 'Try This Question Again →';
+    btn.addEventListener('click', renderMiniQuiz);
+    narrate('Not quite. ' + q.why + ' Try this question again.');
+  }
+  result.appendChild(document.createElement('br'));
+  result.appendChild(document.createElement('br'));
+  result.appendChild(btn);
+}
+function nextMiniQuestion(){ miniIndex++; renderMiniQuiz(); }
+function finishMiniQuiz(){
+  narrate('Checkpoint cleared. The boss awaits.');
+  resetBattle();
+  show('battle');
+}
+
+function nextSpellQuestion(kind){
+  const list = currentRealm().boss.questions[kind];
+  const key = realmId + ':' + kind;
+  if (!spellDeck[key] || !spellDeck[key].length) spellDeck[key] = shuffle(list.map((_, i) => i));
+  const q = list[spellDeck[key].pop()];
+  spellUses[key] = (spellUses[key] || 0) + 1;
+  return shuffleQuestion(q);
+}
+
+function setSpellButtons(locked){
+  document.querySelectorAll('.spell').forEach(b => b.disabled = locked);
+}
+
+function resetBattle(){
+  const boss = currentRealm().boss;
+  playerHp = 100;
+  enemyHp = boss.hp;
+  ward = false;
+  pendingSpell = null;
+  activeQuestion = null;
+  document.getElementById('battleCrumb').textContent = `Realm ${realmIndex(realmId)+1} · Challenge: ${boss.name}`;
+  document.getElementById('enemyAvatar').innerHTML = `<svg viewBox="0 0 96 96"><use href="#boss-${realmId}"/></svg>`;
+  document.getElementById('enemyName').textContent = boss.name;
+  document.getElementById('enemyMax').textContent = boss.hp;
+  document.getElementById('battleLog').textContent = boss.intro;
+  document.getElementById('challenge').className = 'challenge empty';
+  document.getElementById('challengeTitle').textContent = 'Spell Challenge';
+  document.getElementById('question').textContent = 'Choose a spell above to reveal its question.';
+  document.getElementById('answers').innerHTML = '';
+  document.getElementById('result').className = 'result';
+  const wrap = document.getElementById('spells');
+  wrap.innerHTML = '';
+  boss.spells.forEach(sp => {
+    const b = document.createElement('button');
+    b.className = 'spell';
+    b.type = 'button';
+    b.innerHTML = `<b>${sp.name}</b><span>${sp.hint}</span>`;
+    b.addEventListener('click', () => chooseSpell(sp.id));
+    wrap.appendChild(b);
+  });
+  updateBars();
+}
+
+function updateBars(){
+  const max = currentRealm().boss.hp;
+  document.getElementById('playerHp').textContent = Math.max(0, playerHp);
+  document.getElementById('enemyHp').textContent = Math.max(0, enemyHp);
+  document.getElementById('playerBar').style.width = Math.max(0, playerHp) + '%';
+  document.getElementById('enemyBar').style.width = Math.max(0, enemyHp / max * 100) + '%';
+  document.getElementById('topHp').textContent = Math.max(0, playerHp);
+}
+
+function chooseSpell(kind){
+  if (enemyHp <= 0 || pendingSpell) return;
+  pendingSpell = kind;
+  setSpellButtons(true);
+  activeQuestion = nextSpellQuestion(kind);
+  showSpellQuiz();
+}
+
+function showSpellQuiz(){
+  if (!pendingSpell || !activeQuestion) return;
+  const sp = currentRealm().boss.spells.find(s => s.id === pendingSpell);
+  const q = activeQuestion;
+  document.getElementById('challenge').className = 'challenge';
+  document.getElementById('challengeTitle').textContent = sp.name + ' Quiz';
+  document.getElementById('question').textContent = q.question;
+  const box = document.getElementById('answers');
+  box.innerHTML = '';
+  q.answers.forEach((a, i) => {
+    const b = document.createElement('button');
+    b.className = 'answer';
+    b.type = 'button';
+    b.textContent = a;
+    b.addEventListener('click', () => spellAnswer(b, i === q.correct));
+    box.appendChild(b);
+  });
+  document.getElementById('result').className = 'result';
+  document.getElementById('battleLog').textContent = 'Use what you learned. Choose the correct answer to cast your spell.';
+  narrate(q.question);
+}
+
+function spellAnswer(el, correct){
+  if (!pendingSpell) return;
+  document.querySelectorAll('#answers .answer').forEach(b => b.disabled = true);
+  const result = document.getElementById('result');
+  result.className = 'result show';
+  const boss = currentRealm().boss;
+  const strike = Math.min(14, 8 + Math.floor(boss.hp / 20));
+  if (!correct) {
+    el.classList.add('bad');
+    let msg = 'The spell misfires — turn lost.';
+    if (ward) { msg += ' Your ward still blocks the counterattack!'; ward = false; }
+    else { playerHp -= strike; msg += ` ${boss.name} strikes for ${strike} damage!`; }
+    result.innerHTML = '<b>' + msg + '</b>';
+    document.getElementById('battleLog').textContent = msg;
+    narrate(msg);
+    pendingSpell = null;
+    activeQuestion = null;
+    updateBars();
+    if (playerHp <= 0) setTimeout(resetBattle, 1300);
+    else setSpellButtons(false);
+    return;
+  }
+  el.classList.add('good');
+  const sp = boss.spells.find(s => s.id === pendingSpell);
+  let msg = 'Correct! ';
+  if (sp.ward) { ward = true; msg += 'A ward surrounds you. Your next hit will be blocked.'; }
+  else {
+    enemyHp -= sp.damage;
+    if (sp.heal) playerHp = Math.min(100, playerHp + sp.heal);
+    msg += `${sp.name.replace(/^[^A-Za-z]+/, '')} lands for ${sp.damage} damage` + (sp.heal ? ` and restores ${sp.heal} health.` : '.');
+  }
+  if (enemyHp <= 0) {
+    enemyHp = 0;
+    msg += ' ' + boss.defeat;
+  } else if (ward && !sp.ward) {
+    msg += ' Your ward blocks the counterattack!';
+    ward = false;
+  } else if (!sp.ward) {
+    playerHp -= strike;
+    msg += ` ${boss.name} strikes for ${strike} damage!`;
+  }
+  result.innerHTML = '<b>' + msg + '</b>';
+  document.getElementById('battleLog').textContent = msg;
+  narrate(msg);
+  pendingSpell = null;
+  activeQuestion = null;
+  updateBars();
+  if (enemyHp <= 0) setTimeout(winRealm, 1500);
+  else if (playerHp <= 0) setTimeout(resetBattle, 1300);
+  else setSpellButtons(false);
+}
+
+function winRealm(){
+  const r = currentRealm();
+  state[r.id] = true;
+  state.xp = Math.max(state.xp, r.xp);
+  save();
+  document.getElementById('victoryTrophy').innerHTML = `<svg viewBox="0 0 64 64"><use href="#${r.id === 'prompting' ? 'logo-crown' : 'logo-' + r.id}"/></svg>`;
+  document.getElementById('victoryEyebrow').textContent = r.id === 'prompting' ? 'Adventure complete' : 'Realm cleared';
+  document.getElementById('victoryTitle').textContent = r.victory.title;
+  document.getElementById('victoryText').textContent = r.victory.text;
+  document.getElementById('victoryCallout').innerHTML = r.victory.reward;
+  show('victory');
+}
+
+/* —— Narrator —— */
+let narratorOn = false, cachedVoice = null, speakToken = 0;
+const speakReplacements = [
+  [/System\.out\.println/g, 'System dot out dot print-line'],
+  [/System\.out\.print/g, 'System dot out dot print'],
+  [/println/g, 'print-line'],
+  [/NullPointerException/g, 'null pointer exception'],
+  [/console\.log/g, 'console dot log'],
+  [/Math\.max/g, 'math dot max'],
+  [/\bCPU\b/g, 'C P U'],
+  [/\bRAM\b/g, 'ram'],
+  [/\bint\b/g, 'int'],
+  [/\bboolean\b/g, 'boolean'],
+  [/&&/g, ' and '],
+  [/\|\|/g, ' or '],
+  [/!=/g, ' not equal to '],
+  [/==/g, ' equals '],
+  [/\bnull\b/g, 'null'],
+  [/`+/g, ''],
+  [/\s+/g, ' ']
+];
+function forSpeech(text){
+  let s = String(text || '');
+  speakReplacements.forEach(([re, to]) => { s = s.replace(re, to); });
+  return s.replace(/[✦⚗☾⌘✧⚔]/g, '').trim();
+}
+function scoreVoice(v){
+  const n = (v.name || '').toLowerCase();
+  const lang = (v.lang || '').toLowerCase();
+  if (!lang.startsWith('en')) return -100;
+  let s = 0;
+  if (/en-us|en_us/.test(lang)) s += 12;
+  if (/natural|neural|online|premium|enhanced/.test(n)) s += 48;
+  if (/aria|jenny|libby|sonia|samantha|zira|michelle|sara|hazel|eva|moira/.test(n)) s += 22;
+  if (/female|woman/.test(n)) s += 8;
+  if (/google us english|microsoft/.test(n)) s += 6;
+  if (/david|mark|guy|ravi|richard/.test(n) && !/natural|neural|online/.test(n)) s -= 8;
+  return s;
+}
+function preferredVoice(){
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return cachedVoice;
+  cachedVoice = voices.slice().sort((a, b) => scoreVoice(b) - scoreVoice(a))[0] || null;
+  return cachedVoice;
+}
+function narrate(text){
+  if (!narratorOn || !('speechSynthesis' in window)) return;
+  const clean = forSpeech(text);
+  if (!clean) return;
+  const token = ++speakToken;
+  window.speechSynthesis.cancel();
+  const parts = clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [clean];
+  const speakNext = (i) => {
+    if (token !== speakToken || !narratorOn || i >= parts.length) return;
+    const u = new SpeechSynthesisUtterance(parts[i].trim());
+    const voice = preferredVoice();
+    if (voice) { u.voice = voice; u.lang = voice.lang; }
+    else u.lang = 'en-US';
+    u.rate = 0.9;
+    u.pitch = 1.04;
+    u.volume = 0.92;
+    u.onend = () => setTimeout(() => speakNext(i + 1), 160);
+    u.onerror = () => speakNext(i + 1);
+    window.speechSynthesis.speak(u);
+  };
+  setTimeout(() => speakNext(0), 40);
+}
+function toggleNarrator(){
+  narratorOn = !narratorOn;
+  if (!narratorOn && 'speechSynthesis' in window) {
+    speakToken++;
+    window.speechSynthesis.cancel();
+  }
+  const btn = document.getElementById('narratorBtn');
+  btn.textContent = narratorOn ? '🔊 Narrator: On' : '🔇 Narrator: Off';
+  btn.classList.toggle('on', narratorOn);
+  if (narratorOn) {
+    preferredVoice();
+    narrate('Narrator ready. I will read the lessons in a clear story voice.');
+  }
+}
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = () => preferredVoice();
+  preferredVoice();
+}
+
+/* —— Music: lookahead scheduler, safe envelopes, pause when hidden —— */
+let musicOn = true, musicCtx = null, musicTimer = 0, nextNoteTime = 0, musicStep = 0, musicFlavor = null, musicStartedAt = 0;
+const melodies = [
+  [293.66,0,349.23,392,440,392,349.23,329.63,293.66,0,329.63,349.23,392,349.23,329.63,293.66,440,493.88,523.25,493.88,440,392,349.23,440,392,349.23,329.63,293.66,0,261.63,293.66],
+  [293.66,329.63,349.23,0,392,440,392,349.23,329.63,293.66,0,293.66,349.23,392,440,0,493.88,440,392,349.23,440,493.88,440,392,349.23,329.63,293.66,0,329.63,293.66,261.63,0],
+  [440,392,349.23,329.63,293.66,0,293.66,349.23,392,440,493.88,440,392,0,349.23,329.63,293.66,329.63,392,440,523.25,440,392,349.23,329.63,293.66,0,261.63,293.66,349.23,329.63,293.66]
+];
+const harmony = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,349.23,392,440,392,349.23,329.63,293.66,329.63,349.23,329.63,293.66,261.63,0,0,0,0];
+const bass = [146.83,146.83,146.83,146.83,174.61,174.61,174.61,174.61,130.81,130.81,130.81,130.81,146.83,146.83,146.83,146.83];
+const chords = [[146.83,174.61,220],[130.81,174.61,196],[174.61,220,261.63],[146.83,196,220]];
+
+function ensureMusic(){
+  if (musicCtx && musicCtx.state !== 'closed') return musicCtx;
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!Ctx) return null;
+  musicCtx = new Ctx();
+  musicStartedAt = Date.now();
+  musicStep = 0;
+  nextNoteTime = musicCtx.currentTime + 0.08;
+  musicFlavor = null;
+  return musicCtx;
+}
+function envGain(ctx, time, dur, peak, dest){
+  const g = ctx.createGain();
+  const start = Math.max(time, ctx.currentTime + 0.001);
+  const p = Math.max(0.0008, peak);
+  g.gain.setValueAtTime(0.0008, start);
+  g.gain.linearRampToValueAtTime(p, start + Math.min(0.04, dur * 0.2));
+  g.gain.linearRampToValueAtTime(0.0008, start + dur);
+  g.connect(dest);
+  return g;
+}
+function playNote(freq, time, dur, vol, type){
+  if (!musicCtx || !freq) return;
+  try {
+    const osc = musicCtx.createOscillator();
+    const filter = musicCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = type === 'sawtooth' ? 720 : 1400;
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, Math.max(time, musicCtx.currentTime));
+    osc.connect(filter);
+    const g = envGain(musicCtx, time, dur, vol, musicCtx.destination);
+    filter.connect(g);
+    osc.start(time);
+    osc.stop(time + dur + 0.05);
+  } catch (e) { /* ignore late notes after pause */ }
+}
+function playDrum(time){
+  if (!musicCtx) return;
+  try {
+    const length = Math.floor(musicCtx.sampleRate * 0.12);
+    const buffer = musicCtx.createBuffer(1, length, musicCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / length);
+    const src = musicCtx.createBufferSource();
+    const filter = musicCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 540;
+    src.buffer = buffer;
+    src.connect(filter);
+    const g = envGain(musicCtx, time, 0.12, 0.02, musicCtx.destination);
+    filter.connect(g);
+    src.start(time);
+  } catch (e) {}
+}
+function playKick(time){
+  if (!musicCtx) return;
+  try {
+    const osc = musicCtx.createOscillator();
+    osc.type = 'sine';
+    const t = Math.max(time, musicCtx.currentTime);
+    osc.frequency.setValueAtTime(88, t);
+    osc.frequency.exponentialRampToValueAtTime(42, t + 0.12);
+    const g = envGain(musicCtx, time, 0.16, 0.04, musicCtx.destination);
+    osc.connect(g);
+    osc.start(t);
+    osc.stop(t + 0.18);
+  } catch (e) {}
+}
+function newMusicPhrase(section){
+  musicFlavor = {
+    pitch: [1, 0.94387, 1.05946][Math.floor(Math.random() * 3)],
+    leadTone: Math.random() < 0.65 ? 'triangle' : 'sine',
+    melody: (section + Math.floor(Math.random() * 3)) % 3,
+    chordOffset: Math.floor(Math.random() * 4),
+    bassOffset: Math.floor(Math.random() * 4),
+    rhythm: Math.floor(Math.random() * 3),
+    swing: 0.012 + Math.random() * 0.01,
+    flourish: Math.random() < 0.18
+  };
+}
+function scheduleStep(time){
+  const section = Math.floor((Date.now() - musicStartedAt) / 240000) % 3;
+  if (!musicFlavor || (musicStep % 256 === 0 && musicStep % 32 === 0)) newMusicPhrase(section);
+  const f = musicFlavor;
+  const step = musicStep % 32;
+  const beat = step % 8;
+  const melody = melodies[f.melody];
+  const pitch = f.pitch;
+  if (melody[step]) playNote(melody[step] * pitch, time, 0.42, 0.03, f.leadTone);
+  if (harmony[(step + f.chordOffset * 2) % 32]) playNote(harmony[(step + f.chordOffset * 2) % 32] * pitch, time, 0.62, 0.01, 'sine');
+  if (step % 2 === 0) playNote(bass[(Math.floor(step / 2) + f.bassOffset) % 16] * pitch, time, 0.5, 0.016, 'triangle');
+  if (step % 8 === 0) chords[(Math.floor(step / 8) + f.chordOffset) % 4].forEach((n, i) => playNote(n * pitch, time, 1.6, 0.006 + i * 0.001, 'sine'));
+  if (f.rhythm === 0) { if (beat === 0 || beat === 4) playKick(time); if (beat === 2 || beat === 6) playDrum(time); }
+  else if (f.rhythm === 1) { if (beat === 0 || beat === 3 || beat === 6) playKick(time); if (beat === 2 || beat === 5) playDrum(time); }
+  else { if (beat === 0) playKick(time); if (beat === 3) playDrum(time); }
+  if (step === 24 && f.flourish) {
+    [440, 523.25, 587.33].forEach((note, i) => playNote(note * pitch, time + i * 0.14, 0.32, 0.012, 'sine'));
+  }
+  musicStep++;
+}
+function musicScheduler(){
+  if (!musicOn || !musicCtx) return;
+  const ahead = 0.18;
+  const stepDur = 0.268;
+  try {
+    while (nextNoteTime < musicCtx.currentTime + ahead) {
+      const swung = nextNoteTime + ((musicStep % 2) ? musicFlavor?.swing || 0 : 0);
+      scheduleStep(swung);
+      nextNoteTime += stepDur;
+    }
+  } catch (e) {
+    nextNoteTime = musicCtx.currentTime + 0.2;
+  }
+  musicTimer = window.setTimeout(musicScheduler, 40);
+}
+function stopMusicClock(){
+  if (musicTimer) { clearTimeout(musicTimer); musicTimer = 0; }
+}
+async function beginMusic(){
+  if (!musicOn) return;
+  const ctx = ensureMusic();
+  if (!ctx) return;
+  try { await ctx.resume(); } catch (e) {}
+  if (ctx.state !== 'running') return;
+  if (!musicTimer) {
+    nextNoteTime = Math.max(nextNoteTime, ctx.currentTime + 0.06);
+    musicScheduler();
+  }
+}
+function toggleMusic(){
+  musicOn = !musicOn;
+  const btn = document.getElementById('musicBtn');
+  if (musicOn) {
+    btn.textContent = '♫ Music: On';
+    btn.classList.add('on');
+    beginMusic();
+  } else {
+    stopMusicClock();
+    if (musicCtx && musicCtx.state === 'running') musicCtx.suspend();
+    btn.textContent = '♫ Music: Off';
+    btn.classList.remove('on');
+  }
+}
+
+document.getElementById('musicBtn').addEventListener('click', toggleMusic);
+document.getElementById('narratorBtn').addEventListener('click', toggleNarrator);
+document.getElementById('nextLesson').addEventListener('click', nextLesson);
+document.addEventListener('click', (e) => {
+  const showTo = e.target.closest('[data-show]');
+  if (showTo) show(showTo.getAttribute('data-show'));
+  const realmBtn = e.target.closest('[data-realm]');
+  if (realmBtn) startRealm(realmBtn.getAttribute('data-realm'));
+});
+document.addEventListener('pointerdown', () => { if (musicOn) beginMusic(); }, {once:true});
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopMusicClock();
+    if (musicCtx) musicCtx.suspend();
+    if ('speechSynthesis' in window) window.speechSynthesis.pause();
+  } else {
+    if (musicOn) beginMusic();
+    if (narratorOn && 'speechSynthesis' in window) window.speechSynthesis.resume();
+  }
+});
+
+save();
+</script></body></html>
